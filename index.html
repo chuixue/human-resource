@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>数联寻英人力资源大数据平台</title>
+<link href="css/bootstrap.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/public.css" rel="stylesheet">
+<link href="css/menu.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-default" role="navigation" style="margin-bottom:8px">
+   <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" 
+         data-target="#example-navbar-collapse">
+         <span class="sr-only">切换导航</span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#"><i class="icon-home icon-1x"></i> 数联寻英人力资源大数据平台</a>
+   </div>
+   <div class="collapse navbar-collapse" id="example-navbar-collapse">
+      <ul class="nav navbar-nav">
+         <li class="active"><a href="#">首页</a></li>
+         <li><a href="#">功能</a></li>
+         <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+               数据集成 <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+               <li><a href="#">数据1</a></li>
+               <li><a href="#">数据2</a></li>
+               <li><a href="#">数据3</a></li>
+               <li class="divider"></li>
+               <li><a href="#">录入</a></li>
+               <li class="divider"></li>
+               <li><a href="#">其它</a></li>
+            </ul>
+         </li>
+      </ul>
+      <div class="right">
+          <form class="navbar-form navbar-left" role="search">
+              <div class="input-group" style="width:220px; float:right; ">
+                  <input type="text" class="form-control">
+                  <span class="input-group-addon"><i class="icon-search icon-1x"></i></span>
+              </div>
+          </form>
+      </div>    
+      
+      
+      
+        
+	 </div>
+</nav>
+
+<div class="container" style="width:100%">
+	<div class="row">
+    	<div class="col-md-2">
+        
+      <ul id="main-nav" class="main-nav nav nav-tabs nav-stacked" style="">
+        <li id="bar-human">
+            <a href="#">
+                <i class="glyphicon glyphicon-th-large"></i>
+                功能列表	
+            </a>
+        </li>
+        
+        <script id="tm_menu" type="text/html">
+			<% menu.forEach(function(d, i){ %>
+				<li>
+					<a href="#system<%= i %>" class="nav-header collapsed" data-toggle="collapse">
+						<i class="glyphicon glyphicon-<%= d.icon %>"></i> <%= d.name %>
+						<span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
+					</a>
+					<ul id="system<%= i %>" class="nav nav-list secondmenu collapse" style=";height: 0px;">
+						<% d.chlidren.forEach(function(c){ %>
+							<li><a href="<%= c.url %>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= c.name %></a></li>
+						<% }); %>
+					</ul>
+				</li>
+			<% }); %>
+		</script>
+       
+					
+</ul>
+            
+            
+             
+            <div class="panel panel-success" style="margin-top:25px">
+               <div class="panel-heading">
+                  <h3 class="panel-title">数据集成</h3>
+               </div>
+               <div class="panel-body">
+                  历史数据
+               </div>
+            </div>
+
+      	</div>
+
+      	<div class="col-md-10" >
+       		content
+
+    	</div>
+    
+    
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/ejs.js"></script>
+	<script language="javascript">
+		$(document).ready(function() { 
+			var menus = [{ name:"员工构成", icon:'user', chlidren:[
+				{name:'年龄分布', url:'#'}, {name:'工龄分布', url:'#'}, {name:'性别分布', url:'#'}, 
+				{name:'员工籍贯', url:'#'}, {name:'员工学历', url:'#'}, {name:'员工职能', url:'#'}, {name:'其它分析', url:'#'} 
+			]},
+			{name:"时间画像", icon:'time', chlidren:[
+				{name:'打卡时间', url:'#'}, {name:'迟到统计', url:'#'}, {name:'早退统计', url:'#'}, 
+				{name:'加班统计', url:'#'}, {name:'时间分配', url:'#'}, {name:'其它分析', url:'#'},
+			]},
+			{name:"员工绩效", icon:'credit-card', chlidren:[
+				{name:'绩效统计', url:'#'}, {name:'薪酬统计', url:'#'}, {name:'对比分析', url:'#'}, 
+				{name:'其它分析', url:'#'}
+			]},
+			{name:"职业路径", icon:'tasks', chlidren:[
+				{name:'频繁模式挖掘', url:'#'}, {name:'路径预测', url:'#'}
+			]},
+			{name:"互动关系", icon:'eye-open', chlidren:[
+				{name:'工作关系', url:'#'}, {name:'社交关系', url:'#'}, {name:'复杂网络分析', url:'#'}, 
+				{name:'异常预警', url:'#'}, 
+			]},			
+			];
+			var tm_menu = $("#tm_menu").html();
+			var html = ejs.render(tm_menu, { menu: menus });
+			$("#bar-human").after(html);
+			//$(".col-sm-3.col-md-2.sidebar").append(html);
+			
+		}); 
+	
+	
+	</script>
+
+
+<script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>
