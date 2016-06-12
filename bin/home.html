@@ -64,7 +64,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-3 col-md-2 sidebar" style="background-color:rgba(51, 51, 51, 0.99);color:white">
             <ul id="bar-human" class="nav nav-sidebar">
                 <li class="active">
                     <a href="#"><i class="glyphicon glyphicon-th-large"></i> 数据可视化 <span class="sr-only">(current)</span></a>
@@ -80,16 +80,18 @@
                             </a>
                             <ul id="system<%= i %>" class="nav nav-list collapse" style="height: 0px;">
                                 <% d.chlidren.forEach(function(c){ %>
-                                    <li><a href="<%= c.url %>"><%= c.name %></a></li>
+                                    <li style="text-align:center">
+										<a href="<%= c.url %>"><i class=""></i> <%= c.name %></a>
+									</li>
                                 <% }); %>
                             </ul>
                         </li>
                     </ul>	
                 <% }); %>
             </script>
-            <ul class="nav nav-sidebar" style="margin-top:10px;">
+            <ul id="bar-data" class="nav nav-sidebar" style="margin-top:20px;">
                 <li class="active">
-                    <a href="#" style="background-color:#38dbad">
+                    <a href="#">
                         <i class="glyphicon glyphicon-th-large"></i> 数据集成 <span class="sr-only">(current)</span>
                     </a>
                 </li>

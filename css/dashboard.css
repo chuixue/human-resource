@@ -65,7 +65,25 @@ body {
   color: #fff;
   background-color: #428bca;
 }
-
+#bar-human > li > a,
+#bar-data > li > a{
+	color:#0FC	
+}
+.col-sm-3.col-md-2.sidebar > ul > li > a{
+	color:#CCC;
+	border:solid 1px #999;	
+}
+.col-sm-3.col-md-2.sidebar > ul > li > a:hover,
+.col-sm-3.col-md-2.sidebar > ul > li > a:focus{
+	background:#036;
+}
+/* 二级菜单 */
+.col-sm-3.col-md-2.sidebar > ul > li > ul > li > a{
+	color:#ccc;
+}
+.col-sm-3.col-md-2.sidebar > ul > li > ul > li > a:hover{
+	background:#399;
+}
 
 /*
  * Main content
