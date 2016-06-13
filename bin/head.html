@@ -1,133 +1,179 @@
 <xmp>
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../favicon.ico">
+<head>
+  <meta charset="utf-8" />
+  <title>数联寻英人力资源可视化平台</title>
+  <meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="../css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="../css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="../css/simple-line-icons.css" type="text/css" />
+  <link rel="stylesheet" href="../css/font.css" type="text/css" />
+  <link rel="stylesheet" href="../css/app.css" type="text/css" />
+</head>
+<body>
+  <div class="app app-header-fixed" id="app">
+    <!-- navbar -->
+    <div class="app-header navbar">
+      <!-- navbar header -->
+      <div class="navbar-header bg-dark">
+        <button class="pull-right visible-xs dk" data-toggle="class:show" data-target=".navbar-collapse">
+          <i class="glyphicon glyphicon-cog"></i>
+        </button>
+        <button class="pull-right visible-xs" data-toggle="class:off-screen" data-target=".app-aside" ui-scroll="app">
+          <i class="glyphicon glyphicon-align-justify"></i>
+        </button>
+        <!-- brand -->
+        <a href="#/" class="navbar-brand text-lt">
+          <i class="fa fa-header"></i>
+          <img src="../img/logo2.png" alt="." class="hide">
+          <span class="hidden-folded m-l-xs">Hire</span>
+        </a>
+        <!-- / brand -->
+      </div>
+      <!-- / navbar header -->
 
-    <title>Dashboard Template for Bootstrap</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="../css/bootstrap.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="../css/dashboard.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
-    <link href="../css/public.css" rel="stylesheet">
-    
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../js/ie-emulation-modes-warning.js"></script>
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-
-    <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color:#666;">
-      <div class="container-fluid" style="background-color:#ccc;">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#"><i class="icon-home icon-1x"></i> 数联寻英人力资源大数据平台</a>
+      <!-- navbar collapse -->
+      <div class="collapse pos-rlt navbar-collapse box-shadow bg-white-only">
+        <!-- buttons -->
+        <div class="nav navbar-nav hidden-xs">
+          <a href="#" class="btn no-shadow navbar-btn" data-toggle="class:app-aside-folded" data-target=".app">
+            <i class="fa fa-dedent fa-fw text"></i>
+            <i class="fa fa-indent fa-fw text-active"></i>
+          </a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse" style="background-color:#ccc;">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">数据导入</a></li>
-            <li><a href="#">用户设置</a></li>
-            <li><a href="#">帮助</a></li>
-            <li><a href="#">关于</a></li>
-          </ul>
-          <div class="right">
-              <form class="navbar-form navbar-left" role="search">
-                  <div class="input-group" style="width:220px; float:right; ">
-                      <input type="text" class="form-control" placeholder="Search...">
-                      <span class="input-group-addon"><i class="icon-search icon-1x"></i></span>
-                  </div>
-              </form>
-	      </div>
+        <!-- / buttons -->
+
+
+        <!-- nabar right -->
+        <ul class="nav navbar-nav navbar-right">
+          
+          
+          <!-- search form -->
+        <form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" data-target=".navbar-collapse" role="search" ng-controller="TypeaheadDemoCtrl">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" ng-model="selected" typeahead="state for state in states | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Search projects...">
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-sm bg-light rounded"><i class="fa fa-search"></i></button>
+              </span>
+            </div>
+          </div>
+        </form>
+        <!-- / search form -->
+          
+          <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="dropdown-toggle clear">
+              <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                <img src="../img/a0.jpg" alt="...">
+                <i class="on md b-white bottom"></i>
+              </span>
+              <span class="hidden-sm hidden-md">Lucy</span> <b class="caret"></b>
+            </a>
+            <!-- dropdown -->
+            <ul class="dropdown-menu animated fadeInRight w">
+              <li class="wrapper b-b m-b-sm bg-light m-t-n-xs">
+                <div>
+                  <p style="font-size:14px">账户余额：0元</p>
+                </div>
+                <progressbar value="50" class="progress-xs m-b-none bg-white"></progressbar>
+              </li>
+              <li>
+                <a ui-sref="app.docs">
+                  <span class="label bg-info pull-right">new</span>
+                  Help
+                </a>
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a ui-sref="access.signin">退出</a>
+              </li>
+            </ul>
+            <!-- / dropdown -->
+          </li>
+        </ul>
+        <!-- / navbar right -->
+
+      </div>
+      <!-- / navbar collapse -->
+    </div>
+    <!-- / navbar -->
+
+    <!-- menu -->
+    <div class="app-aside hidden-xs bg-dark">
+      <div class="aside-wrap">
+        <div class="navi-wrap">
+
+          <!-- nav -->
+          <nav ui-nav class="navi">
+            <ul class="nav">
+              <li id="bar-human" class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                <span translate="aside.nav.HEADER">数据可视化</span>
+              </li>
+             
+             <script id="tm_menu1" type="text/html">
+                <% menu.forEach(function(d, i){ %>
+ 				  <li>
+					<a href class="auto">
+					  <span class="pull-right text-muted">
+						<i class="fa fa-fw fa-angle-right text"></i>
+						<i class="fa fa-fw fa-angle-down text-active"></i>
+					  </span>
+					  <i class="glyphicon icon glyphicon-<%= d.icon %>"></i>
+					  <span class="font-bold"><%= d.name %></span>
+					</a>
+					<ul class="nav nav-sub dk">
+					  <li class="nav-sub-header"><a href><span><%= d.name %></span></a></li>
+					  <% d.chlidren.forEach(function(c){ %>
+						  <li ui-sref-active="active">
+							<a ui-sref="apps.contact"><span><%= c.name %></span></a>
+						  </li>
+					  <% }); %>
+					</ul>
+				  </li>				  
+                <% }); %>
+            </script>
+
+              <li class="line dk"></li>
+
+              <li id="bar-data" class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                <span translate="aside.nav.components.COMPONENTS">数据管理</span>
+              </li>
+            
+              <li class="line dk hidden-folded"></li>
+
+            </ul>
+          </nav>
+          <!-- nav -->
+
+          <!-- aside footer -->
+          <div class="wrapper m-t">
+            <div class="text-center-folded">
+              <span class="pull-right pull-none-folded">60%</span>
+              <span class="hidden-folded font-12" translate="aside.MILESTONE">数据完整度</span>
+            </div>
+            <div class="progress progress-xxs m-t-sm dk">
+              <div class="progress-bar progress-bar-info" style="width: 60%;">
+              </div>
+            </div>
+            <div class="text-center-folded">
+              <span class="pull-right pull-none-folded">35%</span>
+              <span class="hidden-folded" translate="aside.RELEASE">Release</span>
+            </div>
+            <div class="progress progress-xxs m-t-sm dk">
+              <div class="progress-bar progress-bar-primary" style="width: 35%;">
+              </div>
+            </div>
+          </div>
+          <!-- / aside footer -->
         </div>
       </div>
-    </nav>
+    </div>
+    <!-- / menu -->
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
-            <ul id="bar-human" class="nav nav-sidebar">
-                <li class="active">
-                    <a href="#"><i class="glyphicon glyphicon-th-large"></i> 数据可视化 <span class="sr-only">(current)</span></a>
-                </li>
-            </ul>		
-		<script id="tm_menu" type="text/html">
-			<% menu.forEach(function(d, i){ %>
-				<ul class="nav nav-sidebar">
-					<li>
-						<a href="#system<%= i %>" class="nav-header collapsed" data-toggle="collapse">
-							<i class="glyphicon glyphicon-<%= d.icon %>"></i> <%= d.name %>
-							<span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
-						</a>
-						<ul id="system<%= i %>" class="nav nav-list collapse" style="height: 0px;">
-							<% d.chlidren.forEach(function(c){ %>
-								<li><a href="<%= c.url %>"><%= c.name %></a></li>
-							<% }); %>
-						</ul>
-					</li>
-				</ul>	
-			<% }); %>
-		</script>
-        <ul class="nav nav-sidebar" style="margin-top:30px;">
-	    	<li class="active">
-            	<a href="#" style="background-color:#38dbad">
-                	<i class="glyphicon glyphicon-th-large"></i> 数据集成 <span class="sr-only">(current)</span>
-                </a>
-            </li>
-    	</ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/ejs.js"></script>
-	<script language="javascript">
-		$(document).ready(function() { 
-			var menus = [{ name:"员工构成", icon:'user', chlidren:[
-				{name:'年龄分布', url:'#'}, {name:'工龄分布', url:'#'}, {name:'性别分布', url:'#'}, 
-				{name:'员工籍贯', url:'#'}, {name:'员工学历', url:'#'}, {name:'员工职能', url:'#'}, {name:'其它分析', url:'#'} 
-			]},
-			{name:"时间画像", icon:'time', chlidren:[
-				{name:'打卡时间', url:'#'}, {name:'迟到统计', url:'#'}, {name:'早退统计', url:'#'}, 
-				{name:'加班统计', url:'#'}, {name:'时间分配', url:'#'}, {name:'其它分析', url:'#'},
-			]},
-			{name:"员工绩效", icon:'credit-card', chlidren:[
-				{name:'绩效统计', url:'#'}, {name:'薪酬统计', url:'#'}, {name:'对比分析', url:'#'}, 
-				{name:'其它分析', url:'#'}
-			]},
-			{name:"职业路径", icon:'tasks', chlidren:[
-				{name:'频繁模式挖掘', url:'#'}, {name:'路径预测', url:'#'}
-			]},
-			{name:"互动关系", icon:'eye-open', chlidren:[
-				{name:'工作关系', url:'#'}, {name:'社交关系', url:'#'}, {name:'复杂网络分析', url:'#'}, 
-				{name:'异常预警', url:'#'}, 
-			]},			
-			];
-			var tm_menu = $("#tm_menu").html();
-			var html = ejs.render(tm_menu, { menu: menus });
-			$("#bar-human").after(html);
-			//$(".col-sm-3.col-md-2.sidebar").append(html);
-			
-		}); 
-	</script>
+    <!-- content -->
+    <div class="app-content">
     
 </xmp>

@@ -22,21 +22,21 @@
 	<![endif]-->
 
 </head>
-<body style="font:宋体;color:black; margin:6px; border-bottom:0px">
+<body style="font:宋体;color:black; border-bottom:0px">
 <div style="width:100%; height:100%;">
-	<div id="fm-pan1" style="width:100%; height:410px; background-color:red">
+	<div id="fm-pan1" style="width:100%; height:auto; background-color:#ccc">
 	    
-        <div class="floatL bg-white" style="width:50%;">
+        <div class="floatL bg-white col-sm-12 col-md-6" style="">
             <div class="title">员工学历部门分布</div>
             <div id="view1" style="width:100%;height:380px"></div>    
         </div>
-        <div class="floatL bg-white" style="width:50%;">
+        <div class="floatL bg-white col-sm-12 col-md-6" style="">
             <div class="title">公司学历分布</div>
             <div id="view2" style="width:100%;height:380px"></div>    
         </div>        
 
     </div>    
-    <div id="fm-pan2" style="clear:both;width:100%; min-height:400px; margin-top:10px; background-color:#FFF">
+    <div id="fm-pan2" style="clear:both;width:100%; min-height:400px; margin-top:50px; background-color:#FFF">
     	<div class="title">数据视图</div>
         <div id="view3" style="width:100%;min-height:400px">
         	<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
@@ -127,8 +127,10 @@ $(document).ready(function() {
 		tooltip : { trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)" },
 		legend: { orient : 'vertical', x : 'right', y : 120, data:dtx },
 		series : [{
-				name:'员工学历构成', type:'pie', radius : '60%', center: ['50%', '50%'],
-				data:data,
+				name:'员工学历构成', type:'pie', radius : '60%', center: ['50%', '50%'], data:data,
+				itemStyle : { normal : { label : { formatter : function (params) 
+							{  return params.name + "" + (params.percent - 0).toFixed(0) + '%' }
+				}}},
 		}]
 	};            
 
