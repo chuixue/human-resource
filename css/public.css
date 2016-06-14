@@ -29,18 +29,3 @@
 	border-bottom:1px solid #ccc;
 	padding-left:30px;
 }
-
-.nav-sidebar {
-    margin-right: -21px;
-    margin-bottom: 10px;
-    margin-left: -20px;
-}
-
-/*控制菜单箭头*/
-.nav-header.collapsed > span.glyphicon-chevron-toggle:before {
-    content: "\e114";
-}
-
-.nav-header > span.glyphicon-chevron-toggle:before {
-    content: "\e113";
-}

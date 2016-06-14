@@ -5,7 +5,9 @@
 html {
   background-color: #f0f3f4;
 }
-
+.bg-main {
+  background-color: #F0F3F4;
+}
 body {
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
@@ -1010,6 +1012,16 @@ body {
     z-index: -1;
     width: inherit;
     background-color: inherit;
+    border: inherit;
+    content: "";
+  }
+  .bg-auto2:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    width: inherit;
+    background-color: black;
     border: inherit;
     content: "";
   }
@@ -4331,6 +4343,10 @@ a.text-#000000:hover {
 
 .m-sm {
   margin: 10px;
+}
+
+.p-sm {
+  padding: 10px;
 }
 
 .m {

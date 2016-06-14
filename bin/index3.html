@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="../css/simple-line-icons.css" type="text/css" />
   <link rel="stylesheet" href="../css/font.css" type="text/css" />
   <link rel="stylesheet" href="../css/app.css" type="text/css" />
+  <link rel="stylesheet" href="../css/public.css" type="text/css" />
 </head>
 <body>
   <div class="app app-header-fixed" id="app">
@@ -174,7 +175,8 @@
     <!-- / menu -->
 
     <!-- content -->
-    <div id="frame1" class="app-content">
+    <script src="../js/echarts.min.js"></script>
+    <div id="frame1" class="app-content m-a">
     <!-- head end here -->
     
     
@@ -199,9 +201,10 @@
   <script src="../js/jquery.min.js"></script>
   <script src="../js/bootstrap.js"></script>
   <script src="../js/ejs.js"></script>
-  
   <script type="text/javascript">
   	function href(url){
+		$.ajaxSetup({ cache:false });
+		$.ajaxSetup({ async: false }); 
 		$("<div></div>").load(url,function(){
 			$("#frame1").html(this.innerHTML.match(/<xmp>([\s\S]*?)<\/xmp>/)[1]);
 		});
@@ -282,7 +285,7 @@
           setTimeout(function(){ $(document).trigger('updateNav'); }, 300);      
         });
       });
-	  href("test2.html");
+	  href("test3.html");
 	  //setFrame();
 	  	  
     }(jQuery);
@@ -290,5 +293,6 @@
 	function setFrame(){ $("#fm-main").height(1000 - 158); };
 	//document.documentElement.clientHeight
   </script>
+
 </body>
 </html>
