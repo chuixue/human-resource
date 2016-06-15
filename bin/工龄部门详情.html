@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ECharts test</title>
+<script src="../js/esl.js"></script>
+<script src="../js/config.js"></script>
+</head>
+
+<body style="font:宋体;color:black">
+<div id="view" style=" width:600px; height:400px; margin:100px;border:0px solid green"></div>
+
+<script language="javascript">
+loadUnit("现金管理部", "view");
+function loadUnit(name, id){
+	var dtx=[], dty=[], x={}, y=[];
+	for(var i=1;i <9; i++){ 
+		dtx.push(i * 10 + "-" + (i*10 + 9));
+		x[i] = 0;
+	}
+	for(var i=0; i<64; i++){
+		var tp = parseInt(Math.random()*60) + 18;
+		y.push(tp);
+		console.log(tp/10);
+		x[parseInt(tp/10)] += 1;
+	}
+	for(var k in x)dty.push(x[k]);
+	
+	var my = dty.reduce(function(a, b){ return a>b ? a : b; }, 0), maxY = y.length/3 > my ? y.length/3 : my;
+	
+	option = {
+    title : {
+        text: '员工工龄分布：' + name, x:60
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+    calculable : true,
+    xAxis : [{
+            type : 'category', data : dtx
+    }],
+    yAxis : [ { type : 'value', max: maxY }],
+    series : [
+        {
+            name:'人数',
+            type:'bar',
+            data:dty,
+			markPoint : { data : [ {type : 'max', name: '最大值'} ] },
+        }
+    ]
+	};
+	Init(option, id);
+}
+	function Init(option,id){
+		id=id || "main"
+		require(['echarts','echarts/chart/line','echarts/chart/bar'],
+            function (ec) {
+                var myChart = ec.init(document.getElementById(id));				
+				myChart.setOption(option);
+            }
+        )	 		
+	}
+
+</script>
+
+</body>
+</html>

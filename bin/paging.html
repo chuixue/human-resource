@@ -38,7 +38,7 @@
 
 
 		<div class="example">
-			<table id="paging-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true"></table>
+			<table id="paging-example-1" class="table" data-paging="true" data-filtering="true" data-sorting="true" data-page-size="6"></table>
 		</div>
 
 	</div>
@@ -60,8 +60,12 @@
 	jQuery(function($){
 		$('#paging-example-1').footable({
 			"columns": $.get("content/columns.json"),
-			"rows": $.get("content/rows.json")
+			"rows": $.get("content/rows.json"),
+			"paging": {
+				"size": 5
+			}
 		});
+		
 	});
 </script>
 </body>

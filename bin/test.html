@@ -136,7 +136,6 @@ $(document).ready(function() {
 	Init(option, "view1");
 	Init(option2, "view2");
 	
-
 	
 	$('#table-data').footable({
 		"columns": $.get("content/columns.json"), "rows": $.get("content/rows.json"),
@@ -152,6 +151,7 @@ $(document).ready(function() {
             function (ec) {
                 var myChart = ec.init(document.getElementById(id));				
 				myChart.setOption(option);
+				window.onresize = myChart.resize;
             }
         )	 		
 	}

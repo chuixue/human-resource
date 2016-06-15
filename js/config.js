@@ -1,5 +1,5 @@
 // JavaScript Document
- require.config({
+	require.config({
             packages: [
                 {
                     name: 'echarts',
@@ -11,5 +11,7 @@
                     location: '../js/zrender/src',
                     main: 'zrender'
                 }
+				
             ]
         });
+		

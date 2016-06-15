@@ -1,0 +1,85 @@
+<xmp>
+
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<!-- Prism -->
+	<link href="../css/prism.css" rel="stylesheet">
+	<link href="../css/footable.bootstrap.min.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="../js/html5shiv.min.js"></script>
+	<script src="../js/respond.min.js"></script>
+	<![endif]-->
+<div class="m-sm bg-main">  
+	<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col">
+			<div class="title">各部门人数概况</div>
+            <div id="view1" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col">
+			<div class="title">公司学历分布</div>
+            <div id="view2" class="w-full" style="height:380px"></div>
+		</div>
+	</div>
+
+	<div class="m-t-sm">
+		<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">       
+			<div class="col w-full bg-light lter bg-auto">
+				<div class="title">数据视图</div>
+				<div id="view3" style="width:100%;min-height:400px">
+					<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
+				</div>
+			
+			</div>
+		</div>	
+	</div>
+</div>
+
+<script src="../js/esl.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/jquery-1.9.1.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/prism.js"></script>
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+<script src="../js/moment.min.js"></script>
+<script src="../js/footable.min.js"></script>
+<script src="../js/public.js"></script>
+
+<script language="javascript">
+
+$(document).ready(function() {
+	var dtx=[], dty=[];
+	dty = [71, 27, 40, 20, 61, 30, 35];
+	dtx = ['现金管理部','营销管理部','投资银行部','企业业务部','风险管理部','金融市场部','机构业务部']
+	data = dtx.map(function(d, i){ return {value:dty[i], name:d } });
+	option = {	
+    title : {
+        text: '公司人员分布',
+        subtext: '', x:'center',
+    },
+    tooltip : {
+        trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'horizontal', y : 'bottom',
+        data:dtx
+    },
+    series : [
+        {
+            name:'部门人数', type:'pie', radius : '55%', center: ['50%', '45%'], selectedMode: 'single',
+            data:data,
+			itemStyle : { normal : { label : { formatter : function (params) 
+							{  return params.name + "" + (params.percent - 0).toFixed(0) + '%' }
+			}}},
+        }
+    ]
+};
+
+	Init(option, "view1");
+                    
+
+	
+	
+});
+
+
+
+</xmp>

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ECharts test</title>
+<script src="../js/esl.js"></script>
+<script src="../js/config.js"></script>
+</head>
+
+<body style="font:宋体;color:black">
+<div id="view" style=" width:450px; height:400px; margin:100px"></div>
+
+<script language="javascript">
+	var dtx=[], dty=[];
+	dty = [6, 28, 25, 8, 3];
+	dtx = ["20岁以下", "20-29岁", "30-39岁", "40-49岁", "50岁以上"];
+	data = dtx.map(function(d, i){ return {value:dty[i], name:d } });
+option = {	
+    title : {
+        text: '公司人员年龄分布',
+        subtext: '',
+        x:'center',
+		y:50
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'vertical',
+        x : 'right',
+		y : 120,
+        data:dtx
+    },
+    calculable : true,
+    series : [
+        {
+            name:'访问来源',
+            type:'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:data,
+			selectedMode: 'single'
+        }
+    ]
+};
+
+
+
+	Init(option, "view");
+	function Init(option,id){
+		id=id || "main"
+		require(['echarts','echarts/chart/line','echarts/chart/bar','echarts/chart/pie'],
+            function (ec) {
+                var myChart = ec.init(document.getElementById(id));				
+				myChart.setOption(option);
+            }
+        )	 		
+	}
+
+</script>
+
+</body>
+</html>
