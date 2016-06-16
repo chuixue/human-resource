@@ -55,9 +55,11 @@
 <script src="../js/ie10-viewport-bug-workaround.js"></script>
 <script src="../js/moment.min.js"></script>
 <script src="../js/footable.min.js"></script>
+<script src="../js/footable.filtering.min.js"></script>
 
 <script language="javascript">
 
+var pieSelectName = "nosel";
 $(document).ready(function() {
 	var dtx=[], dty=[];
 	dty = [71, 27, 40, 20, 61, 30, 35];
@@ -170,11 +172,20 @@ $(document).ready(function() {
 		"paging": { "size": 6 }
 	});
 	
-	function selPie(param){ 
+	function selPie(param, hello){ 
 		var unit = param.target;
+		var filtering = FooTable.get('#table-data').use(FooTable.Filtering);
+		if(pieSelectName != unit){
+			pieSelectName = unit;
+			filtering.addFilter('status', unit, ['unit']);
+			filtering.filter();
+		}
+		else {
+			pieSelectName = "nosel";
+			filtering.removeFilter('status');
+			filtering.clear();
+		}
 		loadUnit(unit, "view3");
-		//$('table-data').
-		$('table-data').trigger('footable_filter', {filter: unit});
 	}
 	
 });
