@@ -19,8 +19,10 @@
             <div id="view2" class="w-full" style="height:380px"></div>
 		</div>
 		<div class="col col-sm-5">
-			<div class="title">数据详情</div>
-            <div id="view3" class="w-full" style="height:380px"></div>
+			<div class="title">人员详情</div>
+            <div id="view3" class="w-full p-l-sm" style="height:380px">
+				<table id="table-data1" class="table" data-paging="true" data-filtering="true" data-sorting="true"></table>
+			</div>
 		</div>
 	</div>
 
@@ -31,8 +33,8 @@
 		</div>
 		<div class="col">
 			<div class="title">数据视图</div>
-            <div id="view5" class="w-full" style="height:380px">
-				<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
+            <div id="view5" class="w-full" style="height:380px;">
+				<table id="table-data2" class="table" data-paging="true" data-sorting="true"></table>
 			</div>
 		</div>
 	</div>
@@ -62,12 +64,12 @@
 <script src="../js/footable.filtering.min.js"></script>
 
 <script language="javascript">
-
+var pieSelectName = "nosel";
 $(document).ready(function() {
 	var dt = {}, prv = ['西藏','青海','宁夏','海南','甘肃','贵州','新疆','云南','重庆','吉林','山西','天津','江西','广西','陕西','黑龙江',
 				'内蒙古','安徽','北京','福建','上海','湖北','湖南','四川','辽宁','河北','河南','浙江','山东','江苏','广东'];
 	var value = prv.map(function(d){ return parseInt(Math.random() * 100); });
-	console.log(value);
+	
 	prv.forEach(function(d, i){ dt[d] = value[i]; });
 	var selName = ['北京', '上海', '四川'], selData = {};
 	selName.forEach(function(d){ selData[d] = dt[d]; });
@@ -107,20 +109,44 @@ $(document).ready(function() {
     },
     series : [
         {
-            name:'员工全国分布',
-            type:'pie',
-            roseType : 'area',
+            name:'员工全国分布', type:'pie', roseType : 'area',
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
             },
-            center: ["50%", "60%"],
-            radius: [30, 120],
+            center: ["50%", "60%"], radius: [30, 120], selectedMode:'single',
             data:pieData
         }
     ]
 	};
 	
+	var columns = [
+		{"name":"id","title":"工号","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
+		{"name":"name", "title":"姓名"},
+		{"name":"hometown", "title":"籍贯"},
+		{"name":"nation","title":"民族", "breakpoints":"xs sm"},
+	]
+	$('#table-data1').footable({
+		"columns": columns, "rows": $.get("content/nation.json"),
+		"paging": { "size": 6 }, 'filtering':true
+	});
+	//饼图选择事件
+	function selPie(param){
+		var unit = param.target;
+		var filtering = FooTable.get('#table-data1').use(FooTable.Filtering);
+		if(pieSelectName != unit){
+			pieSelectName = unit;
+			filtering.addFilter('status1', unit, ['hometown']);
+			filtering.filter();
+		}
+		else {
+			pieSelectName = "nosel";
+			filtering.removeFilter('status1');
+			filtering.clear();
+		}
+		
+	}
+	//地图选择事件
 	function selMap(param){
 		var selected = param.selected, mapSeries = option.series[0];
 		var data = [], legendData = [], name;
@@ -137,7 +163,7 @@ $(document).ready(function() {
 	}
 	
 	Init(option, "view1", "mapSelected", selMap, ['map']);
-	Init(option2, "view2");
+	Init(option2, "view2", "pieSelected", selPie);
 	
 });
 

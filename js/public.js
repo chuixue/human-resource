@@ -17,7 +17,6 @@
 				if(eventName != null)myChart.on(eventName, callback); 
 				myChart.setOption(option);
 				window.onresize = myChart.resize;
-				return myChart;
             }
         )	 		
 	}

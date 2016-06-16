@@ -28,7 +28,7 @@
 		<div class="col col-sm-6">
 			<div class="title">数据视图</div>
             <div id="view4" class="w-full" style="height:390px">
-				<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
+				<table id="table-data" class="table" data-paging="true"  data-filtering="true" data-sorting="true"></table>
 			</div>
 		</div>
 	</div>
@@ -159,7 +159,7 @@ $(document).ready(function() {
 		"paging": { "size": 6 }
 	});
 	
-	function selPie(param, hello){ 
+	function selPie(param){ 
 		var unit = param.target;
 		var filtering = FooTable.get('#table-data').use(FooTable.Filtering);
 		if(pieSelectName != unit){

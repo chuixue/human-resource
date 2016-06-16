@@ -4351,7 +4351,15 @@ a.text-#000000:hover {
 .p-n {
   padding: 0px;
 }
-
+.p-t-sm {
+  padding-top: 15px;
+}
+.p-sm {
+  padding: 15px;
+}
+.p-l-sm {
+  padding-left: 15px;
+}
 .m {
   margin: 15px;
 }
