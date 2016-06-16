@@ -7,14 +7,17 @@
 
 	
 
-	function Init(option, id, eventName, callback){
+	function Init(option, id, eventName, callback, otherLibs){
 		id=id || "main";
-		require(['echarts','echarts/chart/line','echarts/chart/bar','echarts/chart/pie'],
+		var libs = ['echarts','echarts/chart/line','echarts/chart/bar','echarts/chart/pie'];
+		if(otherLibs != null)otherLibs.forEach(function(d){ libs.push('echarts/chart/' + d) });
+		require(libs,
             function (ec) {
                 var myChart = ec.init(document.getElementById(id));				
-				if(eventName!=null)myChart.on(eventName, callback); 
+				if(eventName != null)myChart.on(eventName, callback); 
 				myChart.setOption(option);
 				window.onresize = myChart.resize;
+				return myChart;
             }
         )	 		
 	}

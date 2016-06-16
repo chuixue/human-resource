@@ -1,0 +1,222 @@
+<xmp>
+
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<!-- Prism -->
+	<link href="../css/prism.css" rel="stylesheet">
+	<link href="../css/footable.bootstrap.min.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="../js/html5shiv.min.js"></script>
+	<script src="../js/respond.min.js"></script>
+	<![endif]-->
+<div class="m-sm bg-main">  
+	<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col col-sm-6 p-n">
+			<div class="title">各部门人数概况</div>
+            <div id="view1" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col col-sm-6">
+			<div class="title">员工工龄分布</div>
+            <div id="view2" class="w-full" style="height:380px"></div>
+		</div>
+	</div>
+
+	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col col-sm-6 p-n">
+			<div class="title">部门详细情况</div>
+            <div id="view3" class="w-full" style="height:390px"></div>
+		</div>
+		<div class="col col-sm-6">
+			<div class="title">数据视图</div>
+            <div id="view4" class="w-full" style="height:390px">
+				<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="../js/esl.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/jquery-1.9.1.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/prism.js"></script>
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+<script src="../js/moment.min.js"></script>
+<script src="../js/footable.min.js"></script>
+<script src="../js/footable.filtering.min.js"></script>
+
+<script language="javascript">
+
+var pieSelectName = "nosel";
+$(document).ready(function() {
+	var dtx=[], dty=[];
+	dty = [71, 27, 40, 20, 61, 30, 35];
+	dtx = ['现金管理部','营销管理部','投资银行部','企业业务部','风险管理部','金融市场部','机构业务部']
+	data = dtx.map(function(d, i){ return {value:dty[i], name:d } });
+	option = {	
+    title : {
+        text: '公司人员分布',
+        subtext: '', x:'center', y:10
+    },
+    tooltip : {
+        trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'horizontal', y : 'bottom',
+        data:dtx
+    },
+    series : [
+        {
+            name:'部门人数', type:'pie', radius : '55%', center: ['50%', '45%'], selectedMode: 'single',
+            data:data,
+			itemStyle : { normal : { label : { formatter : function (params) 
+							{  return params.name + "" + (params.percent - 0).toFixed(0) + '%' }
+			}}},
+        }
+    ]
+};
+
+	dty = [6, 28, 25, 8, 3];
+	dtx = ["20岁以下", "20-29岁", "30-39岁", "40-49岁", "50岁以上"];
+	data = dtx.map(function(d, i){ return {value:dty[i], name:d } });
+
+	option2 = {
+	title : {
+        text: '公司员工工龄分布',
+        subtext: '',
+		x:'center', y:10
+    },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : { type : 'shadow' }       // 默认为直线，可选为：'line' | 'shadow'
+    },
+	grid:{x2:15},
+    legend: {
+		y:'bottom',
+        data:['1年以下', '2-3年','3-5年','5-10年','10年以上']
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    yAxis : [
+        {
+            type : 'category',
+            data : ['现金管理部','营销管理部','投资银行部','企业业务部','风险管理部','金融市场部','机构业务部']
+        }
+    ],
+    series : [
+        {
+            name:'1年以下',
+            type:'bar',
+            stack: '总量',
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:[20, 5, 12, 2, 15, 4, 9]
+        },
+        {
+            name:'2-3年',
+            type:'bar',
+            stack: '总量',
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:[25, 7, 9, 12, 18, 1, 0]
+        },
+        {
+            name:'3-5年',
+            type:'bar',
+            stack: '总量',
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:[12, 5, 12, 0, 25, 14, 18]
+        },
+        {
+            name:'5-10年',
+            type:'bar',
+            stack: '总量',
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:[5, 5, 7, 3, 2, 10, 3]
+        },
+        {
+            name:'10年以上',
+            type:'bar',
+            stack: '总量',
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:[9, 2, 0, 0, 1, 1, 5]
+        }
+    ]
+};
+       
+	Init(option, "view1", "pieSelected", selPie);
+	Init(option2, "view2");
+    loadUnit("现金管理部", "view3");     
+	var columns = [
+		{"name":"id","title":"工号","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
+		{"name":"name", "title":"姓名"},
+		{"name":"unit", "title":"部门", "breakpoints":"xs sm"},
+		{"name":"years","title":"从业时间","type":"number"},
+	]
+	$('#table-data').footable({
+		"columns": columns, "rows": $.get("content/people.json"),
+		"paging": { "size": 6 }
+	});
+	
+	function selPie(param, hello){ 
+		var unit = param.target;
+		var filtering = FooTable.get('#table-data').use(FooTable.Filtering);
+		if(pieSelectName != unit){
+			pieSelectName = unit;
+			filtering.addFilter('status', unit, ['unit']);
+			filtering.filter();
+		}
+		else {
+			pieSelectName = "nosel";
+			filtering.removeFilter('status');
+			filtering.clear();
+		}
+		loadUnit(unit, "view3");
+	}
+	
+});
+
+
+function loadUnit(name, id){
+	var dtx=[], dty=[], x={}, y=[];
+	for(var i=1;i <9; i++){ 
+		dtx.push(i * 10 + "-" + (i*10 + 9));
+		x[i] = 0;
+	}
+	for(var i=0; i<64; i++){
+		var tp = parseInt(Math.random()*60) + 18;
+		y.push(tp);
+		x[parseInt(tp/10)] += 1;
+	}
+	for(var k in x)dty.push(x[k]);
+	
+	var my = dty.reduce(function(a, b){ return a>b ? a : b; }, 0), maxY = y.length/3 > my ? y.length/3 : my;
+	
+	option = {
+    title : {
+        text: '员工工龄分布：' + name, x:50, y:10
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+	grid:{x:50, x2:20},
+    calculable : true,
+    xAxis : [{
+            type : 'category', data : dtx
+    }],
+    yAxis : [ { type : 'value', max: maxY }],
+    series : [
+        {
+            name:'人数',
+            type:'bar',
+            data:dty,
+			markPoint : { data : [ {type : 'max', name: '最大值'} ] },
+        }
+    ]
+	};
+	Init(option, id);
+}
+
+
+</xmp>

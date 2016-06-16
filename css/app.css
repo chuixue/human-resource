@@ -4348,6 +4348,9 @@ a.text-#000000:hover {
 .p-sm {
   padding: 10px;
 }
+.p-n {
+  padding: 0px;
+}
 
 .m {
   margin: 15px;

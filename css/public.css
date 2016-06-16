@@ -19,7 +19,7 @@
 .height20{ height:20px }
 .height30{ height:30px }
 
-.title{
+.title,title-l,title-r {
 	font-family: "黑体";
     font-size: 13px;
     line-height: 25px;
@@ -28,4 +28,10 @@
 	height:30px;
 	border-bottom:1px solid #ccc;
 	padding-left:30px;
+}
+.title-l{
+	padding-left:0px;
+}
+.title-r{
+	padding-right:0px;
 }
