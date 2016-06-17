@@ -43,16 +43,15 @@
 <script src="../js/footable.min.js"></script>
 
 <script language="javascript">
-
+"use strict";
 $(document).ready(function() {
 	
 	var dtx=[], dty=[];
 	dty = [6, 28, 25, 8, 3];
 	dtx = ["20岁以下", "20-29岁", "30-39岁", "40-49岁", "50岁以上"];
-	data = dtx.map(function(d, i){ return {value:dty[i], name:d } });
-
+	var data = dtx.map(function(d, i){ return {value:dty[i], name:d } });
 	
-	option = {
+	var option = {
 	backgroundColor:"#FFF",
     title : { 'text':'各部门员工学历分布', y: 'bottom', x: 'center' },
             tooltip : {'trigger':'axis'},
@@ -109,7 +108,7 @@ $(document).ready(function() {
 	dty = [6, 28, 25, 8, 3];
 	dtx = ['大专','本科','硕士','博士','其它'];
 	data = dtx.map(function(d, i){ return {value:dty[i], name:d } });
-    option2 = {	
+    var option2 = {	
 		title : { text: '公司人员学历分布', x:'center', y: 'bottom' },
 		tooltip : { trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)" },
 		legend: { orient : 'vertical', x : 'right', y : 120, data:dtx },
@@ -133,6 +132,6 @@ $(document).ready(function() {
 	
 });
 
-
+</script>
 
 </xmp>

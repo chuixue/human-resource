@@ -1,0 +1,169 @@
+<xmp>
+
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<!-- Prism -->
+	<link href="../css/prism.css" rel="stylesheet">
+	<link href="../css/footable.bootstrap.min.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="../js/html5shiv.min.js"></script>
+	<script src="../js/respond.min.js"></script>
+	<![endif]-->
+<div class="m-sm bg-main">  
+	<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col col-sm-4 p-n">
+			<div class="title">人员籍贯分布</div>
+            <div id="view1" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col col-sm-3 p-n">
+			<div class="title"></div>
+            <div id="view2" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col col-sm-5">
+			<div class="title">人员详情</div>
+            <div id="view3" class="w-full p-l-sm" style="height:380px">
+				<table id="table-data1" class="table" data-paging="true" data-filtering="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+
+	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col">
+			<div class="title">部门详细情况</div>
+            <div id="view4" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col">
+			<div class="title">数据视图</div>
+            <div id="view5" class="w-full" style="height:380px;">
+				<table id="table-data2" class="table" data-paging="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+	<!--
+	<div class="m-t-sm">
+		<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">       
+			<div class="col w-full bg-light lter bg-auto">
+				<div class="title">数据视图</div>
+				<div id="view5" style="width:100%;min-height:400px">
+					<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
+				</div>
+			
+			</div>
+		</div>	
+	</div>
+	-->
+</div>
+
+<script src="../js/esl.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/jquery-1.9.1.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/prism.js"></script>
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+<script src="../js/moment.min.js"></script>
+<script src="../js/footable.min.js"></script>
+<script src="../js/footable.filtering.min.js"></script>
+
+<script language="javascript">
+var pieSelectName = "nosel";
+$(document).ready(function() {
+	var dt = {}, prv = ['西藏','青海','宁夏','海南','甘肃','贵州','新疆','云南','重庆','吉林','山西','天津','江西','广西','陕西','黑龙江',
+				'内蒙古','安徽','北京','福建','上海','湖北','湖南','四川','辽宁','河北','河南','浙江','山东','江苏','广东'];
+	var value = prv.map(function(d){ return parseInt(Math.random() * 100); });
+	
+	prv.forEach(function(d, i){ dt[d] = value[i]; });
+	var selName = ['北京', '上海', '四川'], selData = {};
+	selName.forEach(function(d){ selData[d] = dt[d]; });
+	var data = prv.map(function(d, i){ 
+		return selData[d] == undefined ? {name:d, value:value[i]} : {name:d, value:value[i], 'selected':true }; 
+	});
+	var pieData = selName.map(function(d){ return {name:d, value:selData[d]}; });
+	
+	var option = {
+    title : { text: '员工籍贯分布图' }, tooltip : { trigger: 'item'}, animation: false,
+    dataRange: {
+        orient: 'horizontal', min: 0, max: 100,
+        text:['高','低'],           // 文本，默认为数值文本
+        splitNumber:0
+    },
+    series : [
+        {
+            name: '员工全国分布',
+            type: 'map',
+            mapType: 'china',
+            mapLocation: {
+                x: 'left'
+            },
+            selectedMode : 'multiple',
+            itemStyle:{
+                normal:{label:{show:true}},
+                emphasis:{label:{show:true}}
+            },
+            data: data
+        }
+    ],
+	};
+	option2 = { tooltip : { trigger: 'item'}, animation: false,
+    legend: {
+		x:'right', selectedMode:false, data:selName
+    },
+    series : [
+        {
+            name:'员工全国分布', type:'pie', roseType : 'area',
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            center: ["50%", "60%"], radius: [30, 120], selectedMode:'single',
+            data:pieData
+        }
+    ]
+	};
+	
+	var columns = [
+		{"name":"id","title":"工号","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
+		{"name":"name", "title":"姓名"},
+		{"name":"hometown", "title":"籍贯"},
+		{"name":"nation","title":"民族", "breakpoints":"xs sm"},
+	]
+	$('#table-data1').footable({
+		"columns": columns, "rows": $.get("content/nation.json"),
+		"paging": { "size": 6 }, 'filtering':true
+	});
+	//饼图选择事件
+	function selPie(param){
+		var unit = param.target;
+		var filtering = FooTable.get('#table-data1').use(FooTable.Filtering);
+		if(pieSelectName != unit){
+			pieSelectName = unit;
+			filtering.addFilter('status1', unit, ['hometown']);
+			filtering.filter();
+		}
+		else {
+			pieSelectName = "nosel";
+			filtering.removeFilter('status1');
+			filtering.clear();
+		}
+	}
+	//地图选择事件
+	function selMap(param){
+		var selected = param.selected, mapSeries = option.series[0];
+		var data = [], legendData = [], name;
+		for (var p = 0, len = mapSeries.data.length; p < len; p++) {
+			name = mapSeries.data[p].name;
+			if (selected[name]) {
+				data.push({ name: name, value: mapSeries.data[p].value });
+				legendData.push(name);
+			}
+		}
+		option2.legend.data = legendData;
+		option2.series[0].data = data;
+		Init(option2, "view2");
+	}
+	
+	Init(option, "view1", "mapSelected", selMap, ['map']);
+	Init(option2, "view2", "pieSelected", selPie);
+	
+});
+
+</script>
+</xmp>

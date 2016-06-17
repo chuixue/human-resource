@@ -128,7 +128,9 @@
 					  <li class="nav-sub-header"><a href><span><%= d.name %></span></a></li>
 					  <% d.chlidren.forEach(function(c){ %>
 						  <li ui-sref-active="active">
-							<a ui-sref="apps.contact" href="?target=<%= c.url %>"><span><%= c.name %></span></a>
+							<a ui-sref="apps.contact" href="#" title="<%= c.url %>" onclick="goHref(this);">
+								<span><%= c.name %></span>
+							</a>
 						  </li>
 					  <% }); %>
 					</ul>
@@ -203,22 +205,27 @@
   <script src="../js/ejs.js"></script>
   <script src="../js/public.js"></script>
   <script type="text/javascript">
-  	function href(){
-		var target = getQueryString("target");
-		target = target || "test3";
+  "use strict";
+  
+  	function goHref(obj){
+		var target = (obj != undefined && obj.title != "") ? obj.title : "test3";
+		
 		$.ajaxSetup({ cache:false });
 		$.ajaxSetup({ async: false }); 
 		
 		$("<div></div>").load(target + ".html", function(){
+			$("#frame1").html("");
 			$("#frame1").html(this.innerHTML.match(/<xmp>([\s\S]*?)<\/xmp>/)[1]);
 		});
+		//*/
 	}
     +function ($) {
       $(function(){
         
 		var menus = [{ name:"员工构成", icon:'user text-info-dker', chlidren:[
             {name:'年龄分布', url:''}, {name:'工龄分布', url:'staff-years'}, {name:'性别分布', url:''}, 
-            {name:'员工籍贯', url:'test3'}, {name:'员工学历', url:'staff-education'}, {name:'员工职能', url:''}, {name:'其它分析', url:''} 
+            {name:'员工籍贯', url:'staff-home'}, {name:'员工学历', url:'staff-education'}, 
+			{name:'员工职能', url:''}, {name:'其它分析', url:''} 
         ]},
         {name:"时间画像", icon:'time text-success', chlidren:[
             {name:'打卡时间', url:''}, {name:'迟到统计', url:''}, {name:'早退统计', url:''}, 
@@ -289,7 +296,7 @@
           setTimeout(function(){ $(document).trigger('updateNav'); }, 300);      
         });
       });
-	  href();
+	  goHref();
 	  //setFrame();
 	  	  
     }(jQuery);

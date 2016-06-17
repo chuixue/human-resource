@@ -64,8 +64,10 @@
 <script src="../js/footable.filtering.min.js"></script>
 
 <script language="javascript">
+"use strict";
 var pieSelectName = "nosel";
 $(document).ready(function() {
+
 	var dt = {}, prv = ['西藏','青海','宁夏','海南','甘肃','贵州','新疆','云南','重庆','吉林','山西','天津','江西','广西','陕西','黑龙江',
 				'内蒙古','安徽','北京','福建','上海','湖北','湖南','四川','辽宁','河北','河南','浙江','山东','江苏','广东'];
 	var value = prv.map(function(d){ return parseInt(Math.random() * 100); });
@@ -78,8 +80,7 @@ $(document).ready(function() {
 	});
 	var pieData = selName.map(function(d){ return {name:d, value:selData[d]}; });
 	
-	//data[18]['selected'] = true; data[20]['selected'] = true; data[30]['selected'] = true;
-	option = {
+	var option = {
     title : { text: '员工籍贯分布图' }, tooltip : { trigger: 'item'}, animation: false,
     dataRange: {
         orient: 'horizontal', min: 0, max: 100,
@@ -103,7 +104,7 @@ $(document).ready(function() {
         }
     ],
 	};
-	option2 = { tooltip : { trigger: 'item'}, animation: false,
+	var option2 = { tooltip : { trigger: 'item'}, animation: false,
     legend: {
 		x:'right', selectedMode:false, data:selName
     },
@@ -144,7 +145,6 @@ $(document).ready(function() {
 			filtering.removeFilter('status1');
 			filtering.clear();
 		}
-		
 	}
 	//地图选择事件
 	function selMap(param){
@@ -167,11 +167,5 @@ $(document).ready(function() {
 	
 });
 
-
-function loadUnit(name, id){
-
-	//Init(option, id);
-}
-
-
+</script>
 </xmp>
