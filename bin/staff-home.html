@@ -53,21 +53,12 @@
 	-->
 </div>
 
-<script src="../js/esl.js"></script>
-<script src="../js/config.js"></script>
 <script src="../js/jquery-1.9.1.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/prism.js"></script>
-<script src="../js/ie10-viewport-bug-workaround.js"></script>
-<script src="../js/moment.min.js"></script>
-<script src="../js/footable.min.js"></script>
-<script src="../js/footable.filtering.min.js"></script>
-
 <script language="javascript">
 "use strict";
 var pieSelectName = "nosel";
 $(document).ready(function() {
-
+	
 	var dt = {}, prv = ['西藏','青海','宁夏','海南','甘肃','贵州','新疆','云南','重庆','吉林','山西','天津','江西','广西','陕西','黑龙江',
 				'内蒙古','安徽','北京','福建','上海','湖北','湖南','四川','辽宁','河北','河南','浙江','山东','江苏','广东'];
 	var value = prv.map(function(d){ return parseInt(Math.random() * 100); });
