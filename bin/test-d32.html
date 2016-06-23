@@ -1,0 +1,87 @@
+﻿
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    
+    <style type="text/css">
+
+svg {
+  font-size: 14px;
+}
+
+rect.background { fill: none; pointer-events: all; }
+.axis { shape-rendering: crispEdges; }
+.axis path, .axis line { fill: none; stroke: #000; stroke-width: .5px; }
+
+    </style>
+  </head>
+  <body>
+	<div id="main" style="width:80%; height:600px; border:0px solid black; margin:100px"></div>
+    <h2>
+      Flare code size<br>
+      hierarchical bar chart
+    </h2>
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/d3.layout.js"></script>
+	<script type="text/javascript" src="../js/bar-d3.js"></script>
+    <script type="text/javascript">
+
+	
+var div = d3.select("#main"),
+	m = [50, 30, 0, 80], // top right bottom left
+    w = parseInt(div.style("width")) - m[1] - m[3], // width
+    h = parseInt(div.style("height")) - m[0] - m[2], // height
+    x = d3.scale.linear().range([0, w]),
+    y = 25, // bar height
+    z = d3.scale.ordinal().range(["steelblue", "#EE8262"]); // bar color
+
+var hierarchy = d3.layout.partition()
+    .value(function(d) { return d.size; });
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("top");
+
+var svg = d3.select("#main").append("svg:svg")
+    .attr("width", w + m[1] + m[3])
+    .attr("height", h + m[0] + m[2])
+  .append("svg:g")
+    .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+svg.append("svg:rect")
+    .attr("class", "background")
+    .attr("width", w)
+    .attr("height", h)
+    .on("click", up);
+
+svg.append("svg:g")
+    .attr("class", "x axis");
+
+svg.append("svg:g")
+    .attr("class", "y axis")
+  .append("svg:line")
+    .attr("y1", "100%");
+
+d3.json("content/bar-test.json", function(root) {
+  console.log(root.children.length);
+  svg.select("g").attr("height", 2000);
+  
+  hierarchy.nodes(root);
+  x.domain([0, root.value]).nice();
+  down(root, 0);
+  
+});
+
+for(var i=0; i<1000; i++){
+	var height = 1;
+	var width
+	
+}
+
+
+
+
+    </script>
+  </body>
+</html>

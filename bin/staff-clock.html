@@ -1,0 +1,216 @@
+<xmp>
+
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<!-- Prism -->
+	<link href="../css/prism.css" rel="stylesheet">
+	<link href="../css/footable.bootstrap.min.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="../js/html5shiv.min.js"></script>
+	<script src="../js/respond.min.js"></script>
+	<![endif]-->
+<div class="m-sm bg-main">  
+	<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col p-n">
+			<div class="title">考勤统计</div>
+            <div id="view1" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col p-l-sm">
+			<div class="title">部门详细情况</div>
+            <div id="view2" class="w-full p-l-sm" style="height:380px">
+				<table id="table-data1" class="table" data-paging="true" data-filtering="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+
+	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col">
+			<div class="title">加班时间热力图</div>
+            <div id="view3" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col">
+			<div class="title">月详情</div>
+            <div id="view4" class="w-full" style="height:380px;">
+				<table id="table-data2" class="table" data-paging="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+	<!--
+	<div class="m-t-sm">
+		<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">       
+			<div class="col w-full bg-light lter bg-auto">
+				<div class="title">数据视图</div>
+				<div id="view5" style="width:100%;min-height:400px">
+					<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
+				</div>
+			
+			</div>
+		</div>	
+	</div>
+	-->
+</div>
+<script src="../js/echarts.min.js"></script>
+<script src="../js/jquery-1.9.1.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/prism.js"></script>
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+<script src="../js/moment.min.js"></script>
+<script src="../js/footable.min.js"></script>
+
+<script language="javascript">
+"use strict";
+var pieSelectName = "nosel";
+$(document).ready(function() {
+	var units = ['现金管理部', '营销管理部', '投资银行部', '企业业务部', '风险管理部', '金融市场部', '机构业务部'],
+		days = ['Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday', 'Sunday'], data=[];
+	for(var i=0; i<days.length; i++)
+		for(var j=0; j<units.length; j++)
+			data.push([i, j, (i==0 || i==6) ? parseInt(Math.random()*20) : parseInt(Math.random()*100) ]);
+		
+	var max = data.reduce(function(a, b){ return a>b[2] ? a : b[2]; }, 0);
+	data = data.map(function (item) {
+		return [item[1], item[0], item[2] || '-'];
+	});
+	var option = {
+		tooltip: { position: 'top' },
+		animation: false,
+		grid: { height: '75%', y: '20', x2: '15' },
+		xAxis: { type: 'category', data: units },
+		yAxis: { type: 'category', data: days },
+		visualMap: {
+			min: 1, max: max, calculable: true,
+			orient: 'horizontal', left: 'center', bottom: '5'
+		},
+		series: [{
+			name: 'overtime', type: 'heatmap', data: data,
+			label: { normal: { show: true } },
+			itemStyle: {
+				emphasis: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' }
+			}
+		}]
+	};
+
+	data = [];	
+	var lg = ['迟到','早退','请假','加班时长'];
+	units.forEach(function(d){
+		data.push([parseInt(Math.random()*30), parseInt(Math.random()*5), 
+		parseInt(Math.random()*8), parseInt(Math.random()*100)])
+	});
+	data = lg.map(function(d, i){
+		return { name:d, type:'bar', data: data.reduce(function(a, b){ a.push(b[i]); return a; }, []) }
+	});
+	data[3].type = 'line'; data[3].yAxisIndex = 1; 
+	var option2 = {
+    tooltip : { trigger: 'axis' },
+    calculable : true,
+    legend: { data: lg },
+    xAxis : [ { type : 'category', data : units } ],
+    yAxis : [
+        {
+            type : 'value', name : '次数',
+            axisLabel : { formatter: '{value} 次' }
+        },
+        {
+            type : 'value', name : '时长',
+            axisLabel : { formatter: '{value} h' }
+        }
+    ],
+    series : data
+};
+    
+
+	//Init(option, "view1", "", null, ['heatmap']);
+	
+	Init3(option, "view3");
+	Init3(option2, "view1");
+	loadUnit();
+	loadOvertime();
+});
+
+function Init3(option, id){
+	var myChart = echarts.init(document.getElementById(id));
+	myChart.setOption(option);	 		
+}
+//堆积图
+function loadUnit(){
+	var dt1=[], dt2=[], tp= [4, 5, 11, 12, 18, 19, 25, 26], x=[];
+	var ft = tp.reduce(function(a, b){ a[b]=1; return a; }, {});
+	var p1 = 0.8, p2 =0.2;
+	for(var p=0; p<71; p++){
+		for(var i=0; i<31; i++){
+			if(ft[i] == 1)continue;
+			var tp1 = 0, tp2 = 0;
+			var rd = Math.random(), dm = 540, dn = 18 * 60;
+			if(rd>0.32 && rd<0.9)tp1 = - Math.random()* 30;
+			if(rd>0.22 && rd<0.3)tp1 = -Math.random()* 90;
+			if(rd>0.12 && rd<0.15)tp1 = Math.random()* 45;	//迟到
+			
+			if(rd>0.48 && rd<0.8)tp2 = Math.random()* 40;
+			if(rd>0.82 && rd<0.9)tp2 = Math.random()* 80 + 20;
+			if(rd>0.99)tp2 = -Math.random()* 10;	//早退
+			if(rd<0.12)tp2 = Math.random()* 30 + 110; //最晚
+			if(i==3 || i==10 || i==17 || i==24){
+				if(rd<0.88 )tp2 = Math.random()* 40;
+			}
+			if(i==6 || i==13 || i==11){
+				if(rd>0.48 )tp1 = Math.random()* 20;
+			}
+			dm = tp1 + dm - 300; dn = tp2 + dn - 300;
+			if(dm < 270)dt1.push([i, dm]); else dt2.push([i, dm]);
+			if(dn >= 780)dt1.push([i, dn]); else dt2.push([i, dn]);
+			x.push("3月" + (i+1) + "");
+		}
+	}
+	function DateF(date){
+		return parseInt(date/60 + 5) + ":" + date % 60;
+	}
+	console.log(dt1);
+		console.log(dt2);
+	
+	var option = {
+    title : { text: '', subtext: '打卡时间-现金管理部', x:30 },
+    tooltip : { trigger: 'axis' },
+    legend: { data:['正常','异常'], color:['blue', 'red']},
+    calculable : true,
+    xAxis : [{
+            type : 'value', scale : true, 
+			axisLabel : { interval:0, rotate:45, formatter: function(params){ return "3月" + (params + 1) + "日";} }			
+	}],
+    yAxis : [{
+            type : 'value', scale : true,
+			axisLabel : { formatter: function(params){ return DateF(params);} },
+    }],
+    series : [
+        { name:'正常', type:'scatter', symbolSize:3, data: dt1 },
+        { name:'异常', type:'scatter', symbolSize:3, data: dt2 }
+    ]
+	};
+
+	Init3(option, "view2");
+}
+//月详情
+function loadOvertime(unit){
+	var units = [unit];
+	var x = [];
+	for(var i=0; i<31; i++)x.push("3月" + (i+1) + "");
+	var data = [{ name:unit, type:'line',
+				 data: x.reduce(function(a, b){ a.push((Math.random()*5).toFixed(1)); return a; }, []),
+				 markLine : { data : [ {type : 'average', name : '平均值'} ] }
+	}];
+	var wd = [3, 4, 10, 11, 17, 18, 24, 25, 31];
+	wd.forEach(function(d){ if(Math.random()>0.5)data[0].data[d] = 0; });
+	var maxy = parseFloat(data[0].data.reduce(function(a, b){ return a>b?a:b; }, 0.0)) + 2;
+	var option = {
+    title : { text: ''},
+	grid:{ x2:30, y:20 },
+    tooltip : { trigger: 'axis' },
+    legend: { data:units },
+    calculable : true,
+    xAxis : [ { type : 'category', boundaryGap : false, data : x } ],
+    yAxis : [ { type : 'value', max:maxy, axisLabel : { formatter: '{value} h' } } ],
+    series : data
+	};
+	Init3(option, "view4");
+}
+
+</script>
+</xmp>
