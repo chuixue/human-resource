@@ -60,36 +60,8 @@
 "use strict";
 var pieSelectName = "nosel";
 $(document).ready(function() {
-	var units = ['现金管理部', '营销管理部', '投资银行部', '企业业务部', '风险管理部', '金融市场部', '机构业务部'],
-		days = ['Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday', 'Sunday'], data=[];
-	for(var i=0; i<days.length; i++)
-		for(var j=0; j<units.length; j++)
-			data.push([i, j, (i==0 || i==6) ? parseInt(Math.random()*20) : parseInt(Math.random()*100) ]);
-		
-	var max = data.reduce(function(a, b){ return a>b[2] ? a : b[2]; }, 0);
-	data = data.map(function (item) {
-		return [item[1], item[0], item[2] || '-'];
-	});
-	var option = {
-		tooltip: { position: 'top' },
-		animation: false,
-		grid: { height: '75%', y: '20', x2: '15' },
-		xAxis: { type: 'category', data: units },
-		yAxis: { type: 'category', data: days },
-		visualMap: {
-			min: 1, max: max, calculable: true,
-			orient: 'horizontal', left: 'center', bottom: '5'
-		},
-		series: [{
-			name: 'overtime', type: 'heatmap', data: data,
-			label: { normal: { show: true } },
-			itemStyle: {
-				emphasis: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' }
-			}
-		}]
-	};
-
-	data = [];	
+	var units = ['现金管理部', '营销管理部', '投资银行部', '企业业务部', '风险管理部', '金融市场部', '机构业务部'];
+	var data = [];	
 	var lg = ['迟到','早退','请假','加班时长'];
 	units.forEach(function(d){
 		data.push([parseInt(Math.random()*30), parseInt(Math.random()*5), 
@@ -103,7 +75,7 @@ $(document).ready(function() {
     tooltip : { trigger: 'axis' },
     calculable : true,
     legend: { data: lg },
-    xAxis : [ { type : 'category', data : units } ],
+    xAxis : [ { type : 'category', data : units, axisLabel: { rotate: 30, interval:0 } } ],
     yAxis : [
         {
             type : 'value', name : '次数',
@@ -120,9 +92,10 @@ $(document).ready(function() {
 
 	//Init(option, "view1", "", null, ['heatmap']);
 	
-	Init3(option, "view3");
+	loadEveryone();
 	Init3(option2, "view1");
 	loadUnit();
+	loadPerson();
 	loadOvertime();
 });
 
@@ -130,7 +103,7 @@ function Init3(option, id){
 	var myChart = echarts.init(document.getElementById(id));
 	myChart.setOption(option);	 		
 }
-//堆积图
+//散点图
 function loadUnit(){
 	var dt1=[], dt2=[], tp= [4, 5, 11, 12, 18, 19, 25, 26], x=[];
 	var ft = tp.reduce(function(a, b){ a[b]=1; return a; }, {});
@@ -155,61 +128,129 @@ function loadUnit(){
 				if(rd>0.48 )tp1 = Math.random()* 20;
 			}
 			dm = tp1 + dm - 300; dn = tp2 + dn - 300;
-			if(dm < 270)dt1.push([i, dm]); else dt2.push([i, dm]);
-			if(dn >= 780)dt1.push([i, dn]); else dt2.push([i, dn]);
+			if(dm < 270)dt1.push([dm, i]); else dt2.push([dm, i]);
+			if(dn >= 780)dt1.push([dn, i]); else dt2.push([dn, i]);
 			x.push("3月" + (i+1) + "");
 		}
 	}
 	function DateF(date){
-		return parseInt(date/60 + 5) + ":" + date % 60;
+		return parseInt(date/60 + 5) + ":" + parseInt(date % 60);
 	}
-	console.log(dt1);
-		console.log(dt2);
 	
 	var option = {
-    title : { text: '', subtext: '打卡时间-现金管理部', x:30 },
-    tooltip : { trigger: 'axis' },
-    legend: { data:['正常','异常'], color:['blue', 'red']},
-    calculable : true,
-    xAxis : [{
-            type : 'value', scale : true, 
-			axisLabel : { interval:0, rotate:45, formatter: function(params){ return "3月" + (params + 1) + "日";} }			
-	}],
-    yAxis : [{
-            type : 'value', scale : true,
-			axisLabel : { formatter: function(params){ return DateF(params);} },
-    }],
-    series : [
-        { name:'正常', type:'scatter', symbolSize:3, data: dt1 },
-        { name:'异常', type:'scatter', symbolSize:3, data: dt2 }
-    ]
+		title : { text: '部门打卡时间分布', subtext: '现金管理部', x:30 },
+		tooltip : { trigger: 'item', formatter:function(p){ 
+				return '李**' + (p.data[0]<510 ? "上班时间":"下班时间") + '<br />' + p.seriesName + ' ' + DateF(p.data[0]) ;} 
+		},
+		legend: { data:['正常','异常'] },
+		calculable : true,
+		xAxis : [{
+				type : 'value', scale : true, min:40, axisLine:{show:false,onZero:false},
+				axisLabel : { formatter: function(params){ return DateF(params);} },
+		}],
+		yAxis : [{
+				type : 'value', scale : false, min:0, 
+				axisLabel : { formatter: function(params){ return "3月" + (params + 1) + "日";} } }
+		],
+		series : [
+			{ name:'正常', type:'scatter', symbolSize:4, data: dt1 },
+			{ name:'异常', type:'scatter', symbolSize:4, data: dt2 }
+		]
 	};
 
 	Init3(option, "view2");
 }
-//月详情
-function loadOvertime(unit){
-	var units = [unit];
-	var x = [];
-	for(var i=0; i<31; i++)x.push("3月" + (i+1) + "");
-	var data = [{ name:unit, type:'line',
-				 data: x.reduce(function(a, b){ a.push((Math.random()*5).toFixed(1)); return a; }, []),
-				 markLine : { data : [ {type : 'average', name : '平均值'} ] }
-	}];
-	var wd = [3, 4, 10, 11, 17, 18, 24, 25, 31];
-	wd.forEach(function(d){ if(Math.random()>0.5)data[0].data[d] = 0; });
-	var maxy = parseFloat(data[0].data.reduce(function(a, b){ return a>b?a:b; }, 0.0)) + 2;
+//堆积图
+function loadEveryone(){
+	var lg = ['迟到','早退','请假'];
+	var people = getNames(15);         
+	var temp = people.map(function(d){
+		return [parseInt(Math.random()*5), parseInt(Math.random()*2), parseInt(Math.random()*3)];
+	});
+	var data = lg.map(function(d, i){
+		return { name:d, type:'bar', stack:lg[0], data:temp.reduce(function(a, b){ a.push(b[i]); return a; }, []) }	
+	});
+	var max = temp.reduce(function(a, b){ return a>b[0]+b[1]+b[2] ? a : b[0]+b[1]+b[2]; }, 0) + 2;
 	var option = {
-    title : { text: ''},
-	grid:{ x2:30, y:20 },
-    tooltip : { trigger: 'axis' },
-    legend: { data:units },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+	grid: { x:30, x2:30 },
+    legend: { data:lg },
     calculable : true,
-    xAxis : [ { type : 'category', boundaryGap : false, data : x } ],
-    yAxis : [ { type : 'value', max:maxy, axisLabel : { formatter: '{value} h' } } ],
+    xAxis : [ { type : 'category', data : people, axisLabel: { rotate: 45, interval:0 } } ],
+    yAxis : [ { type : 'value', max:max } ],
     series : data
 	};
+	Init3(option, "view3");
+}
+function loadPerson(){
+	var dt=[];
+	
+	for(var i=0; i<22; i++){
+		var dm = parseInt(Math.random()*(125)) + 35, dn = parseInt(Math.random()*(245)) + 45;
+		dt.push({ 'morning':415 + dm - 300, 'night':17 * 60 + dn - 300});
+	}
+	
+	function DateF(date){
+		return parseInt(date/60 + 5) + ":" + date % 60;
+	}
+	var m = dt.map(function(d, i){ return d.morning; });
+	var n = dt.map(function(d, i){ return d.night; });
+	var x = dt.map(function(d, i){ return "第" + (i+1) +"天"; });
+	var mpm = [], mpn = [];
+	dt.forEach(function(d, i){
+		if(d.morning > 270)mpm.push({coord:[i, d.morning], name: '迟到'});	
+		if(d.night < 780)mpn.push({coord:[i, d.night], name: '早退'});		
+	});
+	
+	var option = {
+    title : { text: '员工打卡时间分布', subtext: '李某某-3月', y : 'top', x : '50' },
+    tooltip : { trigger: 'axis' },
+    legend: { data:['上班时间','下班时间'], y :30 },
+    calculable : true,
+    xAxis : [ { type : 'category', data:x, boundaryGap : false, axisLabel: { rotate: 60, interval:0 }, }],
+    yAxis : [ { type : 'value', axisLabel : { formatter: function(params){ return DateF(params);} } } ],
+    series : [
+        {
+            name:'上班时间', type:'line', data: m,
+            markPoint : { data : mpm, label: { normal:{ formatter: "迟到" } } },
+			markLine : {
+                data : [
+				[{
+                  	symbol: 'circle', coord:[0, 270], name: '上班时间',
+                    label: { normal: { formatter: '9:00 上班点' }},	lineStyle:{ normal: { color:'red' } },
+                  }, 
+				  { symbol: 'arrow', coord:[x.length-1, 270],}
+				]]}
+        },
+        {
+            name:'下班时间', type:'line',
+            data:n,
+            markPoint : { data : mpn, label: { normal:{ formatter: "早退" } } },
+			lineStyle:{ emphasis:{color:'rgb(128, 128, 128)'} },
+            markLine : {
+                data : [
+				[{
+                  	symbol: 'circle', coord:[0, 780], name: '下班时间',
+                    label: { normal: { formatter: '18:00 下班点' }},	lineStyle:{ normal: { color:'red' } },
+                  }, 
+				  { symbol: 'arrow', coord:[x.length-1, 780],}
+				]]
+        }}]
+	};
 	Init3(option, "view4");
+	console.log(mpm);
+		console.log(mpn);
+}
+
+
+//月详情
+function loadOvertime(unit){
+	
 }
 
 </script>

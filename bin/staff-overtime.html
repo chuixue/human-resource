@@ -24,11 +24,11 @@
 
 	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white">
 		<div class="col">
-			<div class="title">加班时间热力图</div>
+			<div class="title">一周加班时间热力图</div>
             <div id="view3" class="w-full" style="height:380px"></div>
 		</div>
 		<div class="col">
-			<div class="title">月详情</div>
+			<div class="title">员工月加班详情</div>
             <div id="view4" class="w-full" style="height:380px;">
 				<table id="table-data2" class="table" data-paging="true" data-sorting="true"></table>
 			</div>
@@ -175,7 +175,7 @@ function loadOvertime(unit){
     tooltip : { trigger: 'axis' },
     legend: { data:units },
     calculable : true,
-    xAxis : [ { type : 'category', boundaryGap : false, data : x } ],
+    xAxis : [ { type : 'category', boundaryGap : false, data : x, axisLabel: { rotate: 45, interval:1 } } ],
     yAxis : [ { type : 'value', max:maxy, axisLabel : { formatter: '{value} h' } } ],
     series : data
 	};
