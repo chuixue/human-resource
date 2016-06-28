@@ -11,11 +11,11 @@
 <div class="m-sm bg-main">  
 	<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">
 		<div class="col p-n">
-			<div class="title">考勤统计</div>
+			<div class="title">加班时间统计</div>
             <div id="view1" class="w-full" style="height:380px"></div>
 		</div>
 		<div class="col p-l-sm">
-			<div class="title">部门详细情况</div>
+			<div class="title">3月份工作时间日历</div>
             <div id="view2" class="w-full p-l-sm" style="height:380px">
 				<table id="table-data1" class="table" data-paging="true" data-filtering="true" data-sorting="true"></table>
 			</div>
@@ -122,41 +122,169 @@ $(document).ready(function() {
 	
 	Init3(option, "view3");
 	Init3(option2, "view1");
-	loadUnit();
+	loadDate(2016, 7);
+	
 	loadOvertime();
+	loadAll(units);
 });
 
 function Init3(option, id){
 	var myChart = echarts.init(document.getElementById(id));
 	myChart.setOption(option);	 		
 }
-//堆积图
-function loadUnit(){
-	var lg = ['迟到','早退','请假'];
-	var people = getNames(15);         
-	var temp = people.map(function(d){
-		return [parseInt(Math.random()*5), parseInt(Math.random()*2), parseInt(Math.random()*3)];
-	});
+function loadAll(units){
+	var lg = [], lgu = {};
+	var src = units.reduce(function(a, b, i){
+		var num = parseInt( Math.random() * 15 + 4 ), tp = {}, lsn = getNames(num);
+		lg = lg.concat(lsn);	//人员总列表
+		a.push(lsn.map(function(d, j){ lgu[d] = [i, j]; return { name:d, value:Math.random() * 85 + 4 }; }));
+		return a;
+	}, []);
+	var avg = src.reduce(function(a, b){ return a + b.reduce(function(c, d){ return c + d.value; }, 0) }, 0) / lg.length;
+	
+	var getLs = function(){ return units.map(function(d){ return 0; }); }, index = 0;
 	var data = lg.map(function(d, i){
-		return { name:d, type:'bar', stack:lg[0], data:temp.reduce(function(a, b){ a.push(b[i]); return a; }, []) }	
+		var ltp = getLs();
+		ltp[lgu[d][0]] = parseFloat(src[lgu[d][0]][lgu[d][1]].value).toFixed(1);
+		return { name:d, type:'bar', stack: '总量', data: ltp,
+			label : { normal: {show:true, formatter : function(p){ return p.value<avg ? '' : parseInt(p.value); } }},
+		};
 	});
-	var max = temp.reduce(function(a, b){ return a>b[0]+b[1]+b[2] ? a : b[0]+b[1]+b[2]; }, 0) + 2;
+	
 	var option = {
-    tooltip : {
-        trigger: 'axis',
-        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        }
-    },
-	grid: { x:30, x2:30 },
-    legend: { data:lg },
-    calculable : true,
-    xAxis : [ { type : 'category', data : people } ],
-    yAxis : [ { type : 'value', max:max } ],
-    series : data
+		title : { text: '', subtext: '', x:'center', y:10 },
+		tooltip : { formatter:function(p){ 
+				return '加班时间:' + '<br />' + p.name + '<br />' + p.seriesName + ' ' + p.value + '小时';	}, 
+			trigger: 'item', axisPointer : { type : 'shadow' } },     // 默认为直线，可选为：'line' | 'shadow'
+		grid:{x2:15, y:35, x:80},
+		legend: { y:'left', data:lg, show:false, },
+		calculable : true,
+		xAxis : { type : 'value' },
+		yAxis : { type : 'category', data : units },
+		series : data
 	};
+	Init3(option, "view1");
+}
+	
+function loadDate(year, month){
+	var weekday = (new Date(year + '/' + month + '/1')).getDay(), 
+		days = (new Date(year, month, 0)).getDate(), wend = (new Date(year + '/' + month + '/' + days)).getDay();
+	var src = [[]], lp = {}, row=0;
+	for(var i=0; i<weekday; i++)src[row].push([0, i]);
+	for(var i=0; i<days; i++){
+		if(0 == (i+weekday) % 7){ src.push([]); row++; }
+		lp[i] = [row, (i+weekday) % 7];
+		src[row].push([i+1, (weekday + i % 7) % 7]);
+	}
+	//src	[[[label, col-index],..], []]
+	for(var i=wend + 1; i<7; i++)src[row].push([0, i]);
+	/*
+	for(var i=0; i< src.length; i++){
+		for(var j=0; j< 7; j++){
+			document.write(data[0] + ',' + data[1] + " ");
+		}
+		document.write("<br />");
+	}
+	*/
+	var tp = [];
+	for(var i=0; i<days; i++){
+		tp.push(parseInt(Math.random() * 10));
+	}
+	
+	var data = src.reduce(function(a, b, i) {
+		return a.concat(b.reduce(function(c, d, j){ c.push([i, j, 12]); return c; }, [])); //d[0] || '-'
+	}, []);
+	
+	var data=[];
+	for(var i=0; i<src.length; i++){
+		for(var j=0; j<src[i].length; j++){
+			data.push([j, i, parseInt(Math.random() * 10)]);
+		}
+	}
+	console.log(data);
+	console.log(src);
+
+/*
+	for(var i=0; i< src.length; i++){
+		for(var j=0; j< 7; j++){
+			document.write(data[i*7 + j][0] + ',' + data[i*7 + j][1] + " ");
+		}
+		document.write("<br />");
+	}
+*/
+
+
+	
+	var x = ['日', '一', '二', '三', '四', '五', '六'],
+		y = src.map(function(d, i){ return i; });
+	console.log(x);
+	console.log(y);
+	
+	
+	var option = {
+		tooltip: { position: 'top' },
+		animation: false,
+		grid: { height: '75%', y: '20', x2: '15' },
+		xAxis: { type: 'category', data: x },
+		yAxis: { type: 'category', data: y },
+		visualMap: {
+			min: 1, calculable: true, //max: max, 
+			orient: 'horizontal', left: 'center', bottom: '5'
+		},
+		series: [{
+			name: 'overtime', type: 'heatmap', data: data,
+			label: { normal: { show: true } },
+			itemStyle: {
+				emphasis: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' }
+			}
+		}]
+	};
+	option = {
+    tooltip: {
+        position: 'top'
+    },
+    animation: false,
+    grid: {
+        height: '50%',
+        y: '10%'
+    },
+    xAxis: {
+        type: 'category',
+        data: x
+    },
+    yAxis: {
+        type: 'category',
+        data: y
+    },
+    visualMap: {
+        min: 1,
+        max: 10,
+        calculable: true,
+        orient: 'horizontal',
+        left: 'center',
+        bottom: '15%'
+    },
+    series: [{
+        name: 'Punch Card',
+        type: 'heatmap',
+        data: data,
+        label: {
+            normal: {
+                show: true
+            }
+        },
+        itemStyle: {
+            emphasis: {
+                shadowBlur: 10,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        }
+    }]
+};
+	console.log(option);
 	Init3(option, "view2");
 }
+
 //月详情
 function loadOvertime(unit){
 	var units = [unit];
