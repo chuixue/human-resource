@@ -15,7 +15,7 @@
             <div id="view1" class="w-full" style="height:380px"></div>
 		</div>
 		<div class="col p-l-sm">
-			<div class="title">3月份工作时间日历</div>
+			<div class="title">一周加班时间热力图</div>
             <div id="view2" class="w-full p-l-sm" style="height:380px">
 				<table id="table-data1" class="table" data-paging="true" data-filtering="true" data-sorting="true"></table>
 			</div>
@@ -24,7 +24,7 @@
 
 	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white">
 		<div class="col">
-			<div class="title">一周加班时间热力图</div>
+			<div class="title">3月份工作时间日历</div>
             <div id="view3" class="w-full" style="height:380px"></div>
 		</div>
 		<div class="col">
@@ -74,55 +74,26 @@ $(document).ready(function() {
 		tooltip: { position: 'top' },
 		animation: false,
 		grid: { height: '75%', y: '20', x2: '15' },
-		xAxis: { type: 'category', data: units },
+		xAxis: { type: 'category', data: units, axisLabel: { interval:0 } }, //rotate: 45, 
 		yAxis: { type: 'category', data: days },
 		visualMap: {
 			min: 1, max: max, calculable: true,
-			orient: 'horizontal', left: 'center', bottom: '5'
-		},
+			orient: 'horizontal', left: 'center', bottom: '5',
+			inRange: { color: ['#FFECEC', '#AE0000']}	//'#FFF3EE', '#D94600'] }
+		},	//'#FFFCEC', '#C6A300'
 		series: [{
 			name: 'overtime', type: 'heatmap', data: data,
-			label: { normal: { show: true } },
+			label: { normal: { show: true, formatter:function(p){ return p.value[2] + 'h';}  } },
 			itemStyle: {
 				emphasis: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' }
 			}
 		}]
 	};
-
-	data = [];	
-	var lg = ['迟到','早退','请假','加班时长'];
-	units.forEach(function(d){
-		data.push([parseInt(Math.random()*30), parseInt(Math.random()*5), 
-		parseInt(Math.random()*8), parseInt(Math.random()*100)])
-	});
-	data = lg.map(function(d, i){
-		return { name:d, type:'bar', data: data.reduce(function(a, b){ a.push(b[i]); return a; }, []) }
-	});
-	data[3].type = 'line'; data[3].yAxisIndex = 1; 
-	var option2 = {
-    tooltip : { trigger: 'axis' },
-    calculable : true,
-    legend: { data: lg },
-    xAxis : [ { type : 'category', data : units } ],
-    yAxis : [
-        {
-            type : 'value', name : '次数',
-            axisLabel : { formatter: '{value} 次' }
-        },
-        {
-            type : 'value', name : '时长',
-            axisLabel : { formatter: '{value} h' }
-        }
-    ],
-    series : data
-};
-    
-
 	//Init(option, "view1", "", null, ['heatmap']);
 	
-	Init3(option, "view3");
-	Init3(option2, "view1");
-	loadDate(2016, 7);
+	Init3(option, "view2");
+
+	loadDate(2016, 6);
 	
 	loadOvertime();
 	loadAll(units);
@@ -132,6 +103,7 @@ function Init3(option, id){
 	var myChart = echarts.init(document.getElementById(id));
 	myChart.setOption(option);	 		
 }
+
 function loadAll(units){
 	var lg = [], lgu = {};
 	var src = units.reduce(function(a, b, i){
@@ -169,120 +141,52 @@ function loadAll(units){
 function loadDate(year, month){
 	var weekday = (new Date(year + '/' + month + '/1')).getDay(), 
 		days = (new Date(year, month, 0)).getDate(), wend = (new Date(year + '/' + month + '/' + days)).getDay();
-	var src = [[]], lp = {}, row=0;
-	for(var i=0; i<weekday; i++)src[row].push([0, i]);
+	var src = [], lp = {}, rowCount = Math.ceil((days-7+weekday)/7) + 1, row=rowCount-1;
+	var lsData = [];
 	for(var i=0; i<days; i++){
-		if(0 == (i+weekday) % 7){ src.push([]); row++; }
+		var d = (new Date(year + '/' + month + '/' + (i+1))).getDay(), p = Math.random(), v=0;
+		if(d==0 || d==6)
+			v=parseInt(Math.random() * 10);
+		else
+			v=parseInt(Math.random() * 40 + 10);
+		lsData.push(v);
+	}
+	
+	for(var i=0; i<rowCount; i++)src.push([]);	 //src	[[[label, col-index],..], []]
+	for(var i=0; i<weekday; i++)src[row].push([0, i]);	//开头
+	for(var i=0; i<days; i++){					//日期中间
+		if(0 == (i+weekday) % 7)row--;
 		lp[i] = [row, (i+weekday) % 7];
-		src[row].push([i+1, (weekday + i % 7) % 7]);
+		src[row].push([lsData[i], i+1, (weekday + i % 7) % 7]);
 	}
-	//src	[[[label, col-index],..], []]
-	for(var i=wend + 1; i<7; i++)src[row].push([0, i]);
-	/*
-	for(var i=0; i< src.length; i++){
-		for(var j=0; j< 7; j++){
-			document.write(data[0] + ',' + data[1] + " ");
-		}
-		document.write("<br />");
-	}
-	*/
-	var tp = [];
-	for(var i=0; i<days; i++){
-		tp.push(parseInt(Math.random() * 10));
-	}
+	for(var i=wend + 1; i<7; i++)src[row].push([0, i]);	//结尾
 	
 	var data = src.reduce(function(a, b, i) {
-		return a.concat(b.reduce(function(c, d, j){ c.push([i, j, 12]); return c; }, [])); //d[0] || '-'
+		return a.concat(b.reduce(function(c, d, j){ c.push([j, i, d[0] || '-']); return c; }, [])); //d[0] || '-'
 	}, []);
-	
-	var data=[];
-	for(var i=0; i<src.length; i++){
-		for(var j=0; j<src[i].length; j++){
-			data.push([j, i, parseInt(Math.random() * 10)]);
-		}
-	}
-	console.log(data);
-	console.log(src);
+	var max = data.reduce(function(a, b){ return (b[2]=='-') ? a : (a>b[2] ? a : b[2]) ;}, 0);
 
-/*
-	for(var i=0; i< src.length; i++){
-		for(var j=0; j< 7; j++){
-			document.write(data[i*7 + j][0] + ',' + data[i*7 + j][1] + " ");
-		}
-		document.write("<br />");
-	}
-*/
+	console.log(lsData); console.log(src);
 
-
-	
 	var x = ['日', '一', '二', '三', '四', '五', '六'],
-		y = src.map(function(d, i){ return i; });
-	console.log(x);
-	console.log(y);
-	
+		y = src.map(function(d, i){ return '第' + x[rowCount-i] + '周'; });
 	
 	var option = {
 		tooltip: { position: 'top' },
 		animation: false,
-		grid: { height: '75%', y: '20', x2: '15' },
-		xAxis: { type: 'category', data: x },
-		yAxis: { type: 'category', data: y },
-		visualMap: {
-			min: 1, calculable: true, //max: max, 
-			orient: 'horizontal', left: 'center', bottom: '5'
-		},
+		grid: { height: '75%', y: '40', x2: '25', x:45 },
+		xAxis: { type: 'category', data: x, position:'top' },
+		yAxis: { type: 'category', data: y, show:true },
+		visualMap: { min: 1, calculable: true, max: max, orient: 'horizontal', left: 'center', bottom: '5' },
 		series: [{
 			name: 'overtime', type: 'heatmap', data: data,
-			label: { normal: { show: true } },
-			itemStyle: {
-				emphasis: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' }
-			}
+			label: { normal: { show: true,textStyle:{color:'#0080FF'},
+			 	formatter:function(p){ console.log(p.value[1] + ',' + p.value[0]); return src[p.value[1]][p.value[0]][1]; }  } },
 		}]
 	};
-	option = {
-    tooltip: {
-        position: 'top'
-    },
-    animation: false,
-    grid: {
-        height: '50%',
-        y: '10%'
-    },
-    xAxis: {
-        type: 'category',
-        data: x
-    },
-    yAxis: {
-        type: 'category',
-        data: y
-    },
-    visualMap: {
-        min: 1,
-        max: 10,
-        calculable: true,
-        orient: 'horizontal',
-        left: 'center',
-        bottom: '15%'
-    },
-    series: [{
-        name: 'Punch Card',
-        type: 'heatmap',
-        data: data,
-        label: {
-            normal: {
-                show: true
-            }
-        },
-        itemStyle: {
-            emphasis: {
-                shadowBlur: 10,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-        }
-    }]
-};
+	
 	console.log(option);
-	Init3(option, "view2");
+	Init3(option, "view3");
 }
 
 //月详情
