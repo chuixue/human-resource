@@ -20,14 +20,14 @@
 		</div>
 	</div>
 
-	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white">
+	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white bg-auto">
 		<div class="col col-sm-6 p-n">
 			<div class="title">部门详细情况</div>
-            <div id="view3" class="w-full" style="height:390px"></div>
+            <div id="view3" class="w-full" style="height:400px"></div>
 		</div>
 		<div class="col col-sm-6">
 			<div class="title">数据视图</div>
-            <div id="view4" class="w-full" style="height:390px">
+            <div id="view4" class="w-full" style="height:400px">
 				<table id="table-data" class="table" data-paging="true"  data-filtering="true" data-sorting="true"></table>
 			</div>
 		</div>
@@ -156,7 +156,7 @@ $(document).ready(function() {
 	]
 	$('#table-data').footable({
 		"columns": columns, "rows": $.get("content/people.json"),
-		"paging": { "size": 6 }
+		"paging": { "size": 8 }
 	});
 	
 	function selPie(param){ 

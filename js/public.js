@@ -20,6 +20,10 @@
             }
         )	 		
 	}
+	function Init3(option, id){
+		var myChart = echarts.init(document.getElementById(id));
+		myChart.setOption(option);	 		
+	}
 
 	function getNames(count){
 		var all = [], names = {};

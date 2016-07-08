@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="m-t-sm">
-		<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">       
+		<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white bg-auto">
 			<div class="col w-full bg-light lter bg-auto">
 				<div class="title">数据视图</div>
 				<div id="view3" style="width:100%;min-height:400px">
@@ -121,11 +121,11 @@ $(document).ready(function() {
 	};            
 
 	Init(option, "view2");
-	Init(option2, "view1");
+	Init(option2, "view1");	
 	///*
 	$('#table-data').footable({
 		"columns": $.get("content/columns.json"), "rows": $.get("content/rows.json"),
-		"pageSize": 6
+		"paging": { "size": 9 }
 	});
 	//*/
 	

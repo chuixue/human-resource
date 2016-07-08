@@ -1,0 +1,195 @@
+<xmp>
+
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<!-- Prism -->
+	<link href="../css/prism.css" rel="stylesheet">
+	<link href="../css/footable.bootstrap.min.css" rel="stylesheet">
+
+	<!--[if lt IE 9]>
+	<script src="../js/html5shiv.min.js"></script>
+	<script src="../js/respond.min.js"></script>
+	<![endif]-->
+<style type="text/css">
+	.axis path, .axis line{ fill: none; stroke: #000; shape-rendering: crispEdges;}
+	th td{font-size:12px}
+</style>
+<div class="m-sm bg-main">  
+	<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col col-sm-9 p-n">
+			<div class="title">绩效工资分布</div>
+            <div id="view1" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col col-sm-3">
+			<div class="title">数据统计</div>
+            <div id="view2" class="w-full p-l-sm" style="height:380px">
+				<table id="table-data1" class="table" data-paging="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+
+	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white bg-auto">
+		<div class="col col-sm-6">
+			<div class="title">多要素对比图</div>
+            <div id="view3" class="w-full" style="height:380px; "></div>
+		</div>
+		<div class="col col-sm-6">
+			<div class="title">个人绩效趋势图</div>
+            <div id="view4" class="w-full" style="height:380px;">
+				<table id="table-data2" class="table" data-paging="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+	<!--
+	<div class="m-t-sm">
+		<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">       
+			<div class="col w-full bg-light lter bg-auto">
+				<div class="title">数据视图</div>
+				<div id="view5" style="width:100%;min-height:400px">
+					<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
+				</div>
+			
+			</div>
+		</div>	
+	</div>
+	-->
+</div>
+<script src="../js/esl.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/jquery-1.9.1.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/prism.js"></script>
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+<script src="../js/moment.min.js"></script>
+<script src="../js/footable.min.js"></script>
+<script src="../js/d3.v3.min.js"></script>
+<script src="../js/plotCharts.js"></script>
+<script src="../js/highcharts.js"></script>
+
+<script language="javascript">
+"use strict";
+var pieSelectName = "nosel";
+$(document).ready(function() {
+	function getData(){
+		var names = getNames(20), units = ['现金管理部', '营销管理部', '投资银行部', '企业业务部', '风险管理部', '金融市场部', '机构业务部'],
+			moneyP = [0.3, 0.9, 0.6, 0.5, 1, 0.4, 0.25];
+		var ls = names.map(function(d){
+			var u = parseInt(Math.random() * units.length), p = Math.random(), pv=Math.random();
+			return { name:d, unit:units[u], money:parseInt(Math.random()*6000 + 6000 * moneyP[u]),
+				score:parseInt(Math.random()* 75 + 25), year:p>0.3 ? parseInt(pv*5 + 1): parseInt(pv*10 + 1) };
+		});
+		var x=0, y=0, r=0;
+		ls.forEach(function(d){
+			x = d.money < x ? x : d.money, y = d.score < y ? y : d.score, r = d.year < r ? r : d.year;
+		});
+		return { data:ls, maxX:x, maxY:y, maxR:r };
+	}
+
+	LoadScaff('view1', getData());
+	loadComp();
+	loadTime();
+	var units = ['现金管理部', '营销管理部', '投资银行部', '企业业务部', '风险管理部', '金融市场部', '机构业务部'];
+	var rows = units.map(function(d){ return {'unit':d, 'money':
+		'<span class="status-metro status-suspended" title="Suspended">' + parseInt(Math.random()*40000 +20000),
+		'performance':parseInt(Math.random()*1000 +1000) }; });
+	$('#table-data1').footable({ "columns": [{"name":"unit","title":"部门"},
+	  	{"name":"money","title":"薪酬支出"},{"name":"performance","title":"绩效综合"},], "rows": rows });
+	console.log(rows);
+	
+function loadComp(){
+	var dtx=[], dty1=[], dty2=[], names={};
+	
+	var dtx = getNames(20);
+	dtx.forEach(function(d, i){
+		var gz = 0, jx = 0, p1 = Math.random(), p2 = Math.random();
+		gz = Math.random() * 2000 + 1400;
+		if(p1>0.65)gz = Math.random() * 3000 + 1400;
+		if(p1<0.3)gz = Math.random() * 3000 + 4000;
+		if(p1>0.3 && p1<0.35)gz = Math.random() * 5000 + 8000;
+		if(p2<0.85)jx = 0 + 30 * (gz / 20000); else jx = 100-jx;
+		if(jx > 80)jx=80 * (jx / 100);
+		dty1.push(gz);
+		dty2.push(-1 * jx);
+	});
+	
+	console.log(dty2);
+	var option = {
+		title : { text: '员工工资绩效对比图', subtext: '', x: 'left',textStyle:{fontSize:14} },
+		tooltip : {
+			trigger: 'axis',
+			formatter: function(params) {
+				return params[0].name + '<br/>'
+					   + params[0].seriesName + ' : ' + params[0].value + ' (m^3/s)<br/>'
+					   + params[1].seriesName + ' : ' + -params[1].value + ' (mm)';
+			}
+		},
+		legend: { data:['工资','绩效'], x: 'center' },
+		grid:{ x:45, x2:30, y:50 },
+		xAxis : [{
+				type : 'category', boundaryGap : false, axisLine: {onZero: false},
+				axisLabel:{interval:0, rotate:45, textStyle:{color:'#000',fontWeight:200, 
+				fontFamily:'Times New Roman',fontSize:14}}, data : dtx   
+		}],
+		yAxis : [
+			{ name : '工资（元）', type : 'value', max : 15000 },
+			{ name : '绩效', type : 'value', min:-100, axisLabel : { formatter: function(v){ return  - v; } }, }
+		],
+		series : [
+			{ name:'工资', type:'line', itemStyle: {normal: {areaStyle: {type: 'default'}}}, data:dty1 },
+			{ name:'绩效', type:'line', yAxisIndex:1, itemStyle: {normal: {areaStyle: {type: 'default'}}}, data: dty2}
+		]
+	};
+
+	Init(option, "view3");
+
+		
+	}
+	
+function loadTime(){
+		var chart;  
+		chart = new Highcharts.Chart({  
+			chart: { renderTo: 'view4', margin: [50, 50, 70, 60],
+				plotBackgroundColor: null,  plotBorderWidth: null, zoomType: 'xy'},  
+			title: {  text: ''  },  
+			subtitle: {  text: ''  },  
+			xAxis: [{  
+				categories: ['2014年8月', '2014年9月', '2014年10月', '2014年11月', '2014年12月', '2015年1月', '2015年2月',
+					'2015年3月', '2015年4月', '2015年5月', '2015年6月', '2015年7月' ],  
+				labels: { rotation: -45, align: 'right',  style: { color:'black',font: 'normal 14px "Times New Roman"' } }  
+			}],  
+			yAxis: [{ // Primary yAxis  
+				title: { text: '绩效 ', style: {  color: '#389' } },  
+				labels: { format: '{value} ', style: { color: '#389' } } ,  
+				max: 100  
+			}, { // Secondary yAxis  
+				title: { text: '任务完成度 ', style: { color: '#648' } },  
+				labels: {  format: '{value} %',  style: { color: '#648' }  },  opposite: true  
+			}],  
+			tooltip: {  
+				shared: true, //公用一个提示框  
+				formatter: function() {  
+					return this.x +"<br>" + "<span style='color:#4572A7'>绩效：" + this.points[0].y +" </span><br>"   
+					   + "<span style='color:#89A54E'>任务完成度：" + this.points[1].y +" %</span>"  ;  
+				}  
+			}, 
+			legend: {  
+				layout: 'horizontal',  align: 'center',  x: 0,  
+				verticalAlign: 'top',  y: 0,  floating: true,  backgroundColor: '#FFFFFF'  
+			},  
+			series: [{  
+				name: '绩效',  color: '#389',  type: 'spline',  yAxis: 0,  
+				data: [80, 45, 90, 99, 75, 65, 80, 22.5, 45, 90, 99, 45 ],  
+				tooltip: {  formatter: function() {  return this.y +"";  }  }  
+			}, {  
+				name: '任务完成度',  color: '#648',  type: 'spline',  yAxis: 1,  
+				data: [50, 70, 75, 80, 90, 80, 55, 70, 80, 80, 75, 90],  
+				tooltip: {  valueSuffix: ' %'  }  
+			}]  
+		});  
+}
+
+
+	
+});
+
+</script>
+</xmp>
