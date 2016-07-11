@@ -1,3 +1,4 @@
+var lsRect;	
 	
 	//判断矩形相交	 true:相交	console.log(cross([100,100,150,150], [151,125,300,300]));
 	function Unicode(str) { return escape(str).replace(/%u/gi, ''); };  
@@ -9,14 +10,14 @@
 	function LoadScaff(id, source){
 		var div=d3.select("#"+id), desp_width = 130,
 			w=parseInt(div.style("width")), h=parseInt(div.style("height"));
-		var lsRect = [];
+		lsRect = [];
 		
 		//检测是否与已有标签冲突		true:冲突
 		function rect(d, t){ 
 			var rt = [xScale(d.score)- t.width/2, yScale(d.money)-t.height/2, 
 					xScale(d.score)+ t.width/2, yScale(d.money)+t.height/2], i, l = lsRect.length;
 			for(i=0; i<lsRect.length; i++)if(cross(lsRect[i], rt))break;
-			if(i==lsRect.length)lsRect.push(rt);
+			if(i==l)lsRect.push(rt);
 			return (i==l) ? false : true ;
 		};
 		function order(a, b) { return b.year - a.year; }
@@ -25,7 +26,7 @@
 			width = w - margin.right, height = h - margin.top - margin.bottom, cwidth = w-desp_width-margin.left;
 		var xScale = d3.scale.linear().domain([0, source.maxX+1000]).range([0, cwidth]),
 			yScale = d3.scale.linear().domain([-10, source.maxY+10]).range([height, 0]),
-			radiusScale = d3.scale.sqrt().domain([0, source.maxR]).range([0, 30]),
+			radiusScale = d3.scale.sqrt().domain([0, source.maxR]).range([0, 25]),
 			colorScale = d3.scale.category10();
 		var xAxis = d3.svg.axis().scale(xScale).orient("bottom").ticks(10, d3.format(",d")),
 			yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(5);

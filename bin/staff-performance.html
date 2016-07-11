@@ -11,7 +11,14 @@
 	<![endif]-->
 <style type="text/css">
 	.axis path, .axis line{ fill: none; stroke: #000; shape-rendering: crispEdges;}
-	th td{font-size:12px}
+	.table > thead > tr > th{ font-size:13px; }
+	.table > tbody > tr > td{ font-size:12px; padding-left:0px; }
+	.table > tbody > tr > td > span{ height:12px }
+	.status1{ background: #fa3031 }
+	.status2{ background: green }
+	.status-com{ display: inline-block; border:1px grey solid }
+	
+
 </style>
 <div class="m-sm bg-main">  
 	<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">
@@ -21,7 +28,7 @@
 		</div>
 		<div class="col col-sm-3">
 			<div class="title">数据统计</div>
-            <div id="view2" class="w-full p-l-sm" style="height:380px">
+            <div id="view2" class="w-full p-l-sm" style="height:380px; padding-top:6px">
 				<table id="table-data1" class="table" data-paging="true" data-sorting="true"></table>
 			</div>
 		</div>
@@ -87,12 +94,34 @@ $(document).ready(function() {
 	LoadScaff('view1', getData());
 	loadComp();
 	loadTime();
+	//var 
+	//new Array(ldt[i][0]).join("a")
 	var units = ['现金管理部', '营销管理部', '投资银行部', '企业业务部', '风险管理部', '金融市场部', '机构业务部'];
-	var rows = units.map(function(d){ return {'unit':d, 'money':
-		'<span class="status-metro status-suspended" title="Suspended">' + parseInt(Math.random()*40000 +20000),
-		'performance':parseInt(Math.random()*1000 +1000) }; });
+	var ldt = units.map(function(d){ return [parseInt(Math.random()*40000 +20000), 
+		parseInt(Math.random()*1000 +1000)]; }); 
+	var rows = units.map(function(d, i){ return {'unit':d, 'money':
+		'<span class="status1 status-com" title="'+ ldt[i][0] +'">' + '&nbsp;&nbsp;&nbsp;' + '</span>',
+		'performance':'<span class="status2 status-com" title="'+ ldt[i][0] +'">' + '' + '</span>', }; });
 	$('#table-data1').footable({ "columns": [{"name":"unit","title":"部门"},
 	  	{"name":"money","title":"薪酬支出"},{"name":"performance","title":"绩效综合"},], "rows": rows });
+	
+	changeStyle(ldt);
+	function changeStyle(dt){
+		var e = $('#table-data1>tbody>tr>td:nth-child(2)'), tdw = e.width()-2, 
+			spw = $('#table-data1>tbody>tr>td:nth-child(2)').find('span').width()/3,	
+			maxc = parseInt(tdw/spw);
+		var max1 = dt.reduce(function(a, b){ return a>b[0]?a:b[0] }, 0), 
+			max2 = dt.reduce(function(a, b){ return a>b[1]?a:b[1] }, 0);
+		$('#table-data1>tbody>tr>td:nth-child(2)').each(
+			function(i){ $(this).find("span").html(new Array(parseInt(ldt[i][0] * maxc / max1)).join('&nbsp;')); 
+		});
+		$('#table-data1>tbody>tr>td:nth-child(3)').each(
+			function(i){ $(this).find('span').html(new Array(parseInt(ldt[i][1] * maxc / max2)).join('&nbsp;')); 
+		});
+		
+	}
+	
+
 	console.log(rows);
 	
 function loadComp(){
