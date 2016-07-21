@@ -8,160 +8,123 @@
 
 <script language="javascript">
 $(function () {
-    /**
-     * Create a constructor for sparklines that takes some sensible defaults and merges in the individual
-     * chart options. This function is also available from the jQuery plugin as $(element).highcharts('SparkLine').
-     */
-    Highcharts.SparkLine = function (a, b, c) {
-        var hasRenderToArg = typeof a === 'string' || a.nodeName,
-            options = arguments[hasRenderToArg ? 1 : 0],
-            defaultOptions = {
-                chart: {
-                    renderTo: (options.chart && options.chart.renderTo) || this,
-                    backgroundColor: null,
-                    borderWidth: 0,
-                    type: 'area',
-                    margin: [2, 0, 2, 0],
-                    width: 120,
-                    height: 20,
-                    style: {
-                        overflow: 'visible'
-                    },
-                    skipClone: true
-                },
-                title: {
-                    text: ''
-                },
-                credits: {
-                    enabled: false
-                },
-                xAxis: {
-                    labels: {
-                        enabled: false
-                    },
-                    title: {
-                        text: null
-                    },
-                    startOnTick: false,
-                    endOnTick: false,
-                    tickPositions: []
-                },
-                yAxis: {
-                    endOnTick: false,
-                    startOnTick: false,
-                    labels: {
-                        enabled: false
-                    },
-                    title: {
-                        text: null
-                    },
-                    tickPositions: [0]
-                },
-                legend: {
-                    enabled: false
-                },
-                tooltip: {
-                    backgroundColor: null,
-                    borderWidth: 0,
-                    shadow: false,
-                    useHTML: true,
-                    hideDelay: 0,
-                    shared: true,
-                    padding: 0,
-                    positioner: function (w, h, point) {
-                        return { x: point.plotX - w / 2, y: point.plotY - h };
-                    }
-                },
-                plotOptions: {
-                    series: {
-                        animation: false,
-                        lineWidth: 1,
-                        shadow: false,
-                        states: {
-                            hover: {
-                                lineWidth: 1
-                            }
-                        },
-                        marker: {
-                            radius: 1,
-                            states: {
-                                hover: {
-                                    radius: 2
-                                }
-                            }
-                        },
-                        fillOpacity: 0.25
-                    },
-                    column: {
-                        negativeColor: '#910000',
-                        borderColor: 'silver'
-                    }
-                }
-            };
-
-        options = Highcharts.merge(defaultOptions, options);
-
-        return hasRenderToArg ?
-            new Highcharts.Chart(a, options, c) :
-            new Highcharts.Chart(options, b);
-    };
-
-    var start = +new Date(),
-        $tds = $('td[data-sparkline]'),
-        fullLen = $tds.length,
-        n = 0;
-
-    // Creating 153 sparkline charts is quite fast in modern browsers, but IE8 and mobile
-    // can take some seconds, so we split the input into chunks and apply them in timeouts
-    // in order avoid locking up the browser process and allow interaction.
-    function doChunk() {
-        var time = +new Date(),
-            i,
-            len = $tds.length,
-            $td,
-            stringdata,
-            arr,
-            data,
-            chart;
-
-        for (i = 0; i < len; i += 1) {
-            $td = $($tds[i]);
-            stringdata = $td.data('sparkline');
-            arr = stringdata.split('; ');
-            data = $.map(arr[0].split(', '), parseFloat);
-            chart = {};
-
-            if (arr[1]) {
-                chart.type = arr[1];
+	var units = ['现金管理部', '营销管理部', '投资银行部', '企业业务部', '风险管理部', '金融市场部', '机构业务部'];
+	var lg = ['上网', '会议', '收发邮件', '看电影', 'OA系统', '玩游戏', '其它'];
+    var colors = Highcharts.getOptions().colors,
+        categories = lg,
+		data = lg.map(function(d, i){
+			//var tp = units.;
+		});
+        data = [{
+            y: 56.33,
+            color: colors[0],
+            drilldown: {
+                name: '上网',
+                categories: units,
+                data: [1.06, 0.5, 17.2, 8.11, 5.33, 24.13],
+                color: colors[0]
             }
-            $td.highcharts('SparkLine', {
-                series: [{
-                    data: data,
-                    pointStart: 1
-                }],
-                tooltip: {
-                    headerFormat: '<span style="font-size: 10px">' + $td.parent().find('th').html() + ', Q{point.x}:</span><br/>',
-                    pointFormat: '<b>{point.y}.000</b> USD'
-                },
-                chart: chart
+        }, {
+            y: 10.38,
+            color: colors[1],
+            drilldown: {
+                name: '会议',
+                categories: units,
+                data: [0.33, 0.15, 0.22, 1.27, 2.76, 2.32, 2.31, 1.02],
+                color: colors[1]
+            }
+        }, {
+            y: 24.03,
+            color: colors[2],
+            drilldown: {
+                name: '收发邮件',
+                categories: units,
+                data: [0.14, 1.24, 0.55, 0.19, 0.14, 0.85, 2.53, 0.38, 0.6, 2.96, 5, 4.32, 3.68, 1.45],
+                color: colors[2]
+            }
+        }, {
+            y: 4.77,
+            color: colors[3],
+            drilldown: {
+                name: 'OA系统',
+                categories: units,
+                data: [0.3, 0.42, 0.29, 0.17, 0.26, 0.77, 2.56],
+                color: colors[3]
+            }
+        }, {
+            y: 0.91,
+            color: colors[4],
+            drilldown: {
+                name: '其它',
+                categories: units,
+                data: [0.34, 0.17, 0.24, 0.16],
+                color: colors[4]
+            }
+        }, {
+            y: 0.2,
+            color: colors[5],
+            drilldown: {
+                name: '玩游戏',
+                categories: [],
+                data: [],
+                color: colors[5]
+            }
+        }],
+        browserData = [],
+        versionsData = [],
+        dataLen = data.length;
+
+
+    // Build the data arrays
+    for (var i = 0; i < dataLen; i += 1) {
+
+        // add browser data
+        browserData.push({
+            name: categories[i],
+            y: data[i].y,
+            color: data[i].color
+        });
+
+        // add version data
+        var drillDataLen = data[i].drilldown.data.length;
+        for (var j = 0; j < drillDataLen; j += 1) {
+            var brightness = 0.2 - (j / drillDataLen) / 5;
+            versionsData.push({
+                name: data[i].drilldown.categories[j],
+                y: data[i].drilldown.data[j],
+                color: Highcharts.Color(data[i].color).brighten(brightness).get()
             });
-
-            n += 1;
-
-            // If the process takes too much time, run a timeout to allow interaction with the browser
-            if (new Date() - time > 500) {
-                $tds.splice(0, i + 1);
-                setTimeout(doChunk, 0);
-                break;
-            }
-
-            // Print a feedback on the performance
-            if (n === fullLen) {
-                $('#view').html('Generated ' + fullLen + ' sparklines in ' + (new Date() - start) + ' ms');
-            }
         }
     }
-    doChunk();
+
+    // Create the chart
+    $('#view').highcharts({
+        chart: { type: 'pie' },
+        title: { text: '各部门工作时间分配统计' },
+        subtitle: { text: '' },
+        yAxis: { title: { text: 'Total percent market share' } },
+        plotOptions: { pie: { shadow: false, center: ['50%', '50%'] } },
+        tooltip: { valueSuffix: '%' },
+        series: [{
+            name: 'Browsers', size: '60%',
+            data: browserData,
+            dataLabels: {
+                formatter: function () { return this.y > 5 ? this.point.name : null; },
+                color: '#ffffff', distance: -30
+            }
+        }, {
+            name: 'Versions', size: '80%', innerSize: '60%',
+            data: versionsData,
+            dataLabels: {
+                formatter: function () {
+                    // display only if larger than 1
+                    return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%' : null;
+                }
+            }
+        }]
+    });
+
+
 
 });
 

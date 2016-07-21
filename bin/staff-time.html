@@ -1,0 +1,269 @@
+<xmp>
+
+	<link href="../css/bootstrap-theme.min.css" rel="stylesheet">
+	<!-- Prism -->
+	<link href="../css/prism.css" rel="stylesheet">
+	<link href="../css/footable.bootstrap.min.css" rel="stylesheet">
+
+	<!--[if lt IE 9]>
+	<script src="../js/html5shiv.min.js"></script>
+	<script src="../js/respond.min.js"></script>
+	<![endif]-->
+<style type="text/css">
+
+
+</style>
+<div class="m-sm bg-main">  
+	<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">
+		<div class="col col-sm-5 p-n">
+			<div class="title">公司概况</div>
+            <div id="view1" class="w-full" style="height:380px"></div>
+		</div>
+		<div class="col col-sm-4">
+			<div class="title">部门统计</div>
+            <div id="view2" class="w-full p-l-sm" style="height:380px; padding-top:6px">
+				<table id="table-data1" class="table" data-paging="true" data-sorting="true"></table>
+			</div>
+		</div>
+		<div class="col col-sm-3">
+			<div class="title">个人统计</div>
+            <div id="view3" class="w-full p-l-sm" style="height:380px; padding-top:6px">
+				<table id="table-data1" class="table" data-paging="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+
+	<div class="m-t-sm hbox hbox-auto-xs hbox-auto-xs bg-white bg-auto">
+		<div class="col col-sm-9">
+			<div class="title">事件画像</div>
+            <div id="view4" class="w-full" style="height:380px; "></div>
+		</div>
+		<div class="col col-sm-3">
+			<div class="title">查看详情</div>
+            <div id="view5" class="w-full" style="height:380px;">
+				<table id="table-data2" class="table" data-paging="true" data-sorting="true"></table>
+			</div>
+		</div>
+	</div>
+	<!--
+	<div class="m-t-sm">
+		<div class="hbox hbox-auto-xs hbox-auto-xs bg-white">       
+			<div class="col w-full bg-light lter bg-auto">
+				<div class="title">数据视图</div>
+				<div id="view5" style="width:100%;min-height:400px">
+					<table id="table-data" class="table" data-page-size="4" data-paging="true"  data-filtering="true" data-sorting="true"></table>
+				</div>
+			
+			</div>
+		</div>	
+	</div>
+	-->
+</div>
+<script src="../js/esl.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/jquery-1.9.1.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/prism.js"></script>
+<script src="../js/ie10-viewport-bug-workaround.js"></script>
+<script src="../js/moment.min.js"></script>
+<script src="../js/footable.min.js"></script>
+<script src="../js/d3.v3.min.js"></script>
+<script src="../js/timePiece.js"></script>
+<script src="../js/highcharts.js"></script>
+
+<script language="javascript">
+"use strict";
+var pieSelectName = "nosel";
+$(document).ready(function() {
+	var data = {
+        worktime: {
+            morning: '9:30',
+            noon: '12:00',
+            afternoon: '13:30',
+            night: '18:00',
+            nightIn: '19:00',
+            nightOff: '21:00'
+        },
+        drawtime: {begin: '7:00', end: '24:00'},
+        action: ['上网', '看电影', '会议', '收发邮件', '玩游戏'],
+        data: [['10:20', '11:20', 0], ['12:00', '14:30', 1], ['15:20', '16:30', 2], ['16:45', '17:20', 3], ['19:20', '20:25', 4]]
+    };
+    loadTimePiece('view4', data);
+	loadPersonTime('view3');
+	
+	function loadPersonTime(id){
+		$('#' + id).highcharts({
+			chart: { type: 'bar', marginLeft:25 },
+			title: { text: '李**时间统计' },
+			subtitle: { text: '' },
+			xAxis: {
+				categories: [''],
+				title: { offset:12, rotation: 270, text: '时间统计', style:{'fontSize':'15px'} }
+			},
+			yAxis: {
+				min: 0, lineWidth: 1,
+				title: { text: '时长 (单位：小时)', align: 'high' },
+				labels: { overflow: 'justify' }
+			},
+			tooltip: { valueSuffix: ' h' },
+			plotOptions: { bar: { dataLabels: { enabled: true } } },
+			legend: {
+				layout: 'vertical', align: 'right', verticalAlign: 'top',
+				x: -15, y: 60, floating: true, borderWidth: 1, shadow: true,
+				backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF')
+			},
+			credits: { enabled: false },
+			series: [{ name: '会议', data: [1.2]},
+			{ name: '看电影', data: [1.5]},
+			{ name: '收发邮件', data: [0.7]},
+			{name: '玩游戏', data: [2]},
+			{ name: '上网', data: [4.5]}
+			]
+		});	
+	}
+	loadUnitInfo();
+	function loadUnitInfo(){
+		var names = getNames(15);
+		var lg = ['上网', '会议', '收发邮件', '看电影', 'OA系统', '玩游戏', '其它'];
+		var dt = lg.map(function(d){
+				return {name:d, data:names.map(function(c){ return Math.floor(Math.random() * 2); }) };
+			});
+		console.log(dt);
+		$('#view2').highcharts({
+			chart: { type: 'column' },
+			title: { text: '现金管理部人员时间分配统计' },
+			xAxis: { categories: names },
+			yAxis: { min: 0, title: { text: '时间 （单位:小时）' } },
+			tooltip: {
+				pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+				shared: true
+			},
+			plotOptions: { column: { stacking: 'normal' } },
+			series: dt
+		});
+	}
+	loadAll('view1');
+	function loadAll(id) {
+		var units = ['现金管理部', '营销管理部', '投资银行部', '企业业务部', '风险管理部', '金融市场部', '机构业务部'];
+		var lg = ['上网', '会议', '收发邮件', '看电影', 'OA系统', '玩游戏', '其它'];
+		var colors = Highcharts.getOptions().colors,
+			categories = lg,
+			data = lg.map(function(d, i){
+				//var tp = units.;
+			});
+		var data = [{
+				y: 49.33,
+				color: colors[0],
+				drilldown: {
+					name: '上网',
+					categories: units,
+					data: [1.06, 0.5, 15.2, 8.11, 5.33, 19.13],
+					color: colors[0]
+				}
+			}, {
+				y: 10.38,
+				color: colors[1],
+				drilldown: {
+					name: '会议',
+					categories: units,
+					data: [0.33, 0.15, 0.22, 1.27, 2.76, 2.32, 3.33],
+					color: colors[1]
+				}
+			}, {
+				y: 15.01,
+				color: colors[2],
+				drilldown: {
+					name: '收发邮件',
+					categories: units,
+					data: [0.14, 1.24, 0.19, 0.14, 5.85, 2.53, 4.38],
+					color: colors[2]
+				}
+			}, {
+				y: 4.77,
+				color: colors[3],
+				drilldown: {
+					name: 'OA系统',
+					categories: units,
+					data: [0.3, 0.42, 0.29, 0.17, 0.26, 0.77, 2.56],
+					color: colors[3]
+				}
+			}, {
+				y: 0.91,
+				color: colors[4],
+				drilldown: {
+					name: '其它',
+					categories: units,
+					data: [0.34, 0.17, 0.24, 0.16],
+					color: colors[4]
+				}
+			}, {
+				y: 0.2,
+				color: colors[5],
+				drilldown: {
+					name: '玩游戏',
+					categories: [],
+					data: [],
+					color: colors[5]
+				}
+			}],
+			browserData = [],
+			versionsData = [],
+			dataLen = data.length;
+
+
+		// Build the data arrays
+		for (var i = 0; i < dataLen; i += 1) {
+
+			// add browser data
+			browserData.push({
+				name: categories[i],
+				y: data[i].y,
+				color: data[i].color
+			});
+
+			// add version data
+			var drillDataLen = data[i].drilldown.data.length;
+			for (var j = 0; j < drillDataLen; j += 1) {
+				var brightness = 0.2 - (j / drillDataLen) / 5;
+				versionsData.push({
+					name: data[i].drilldown.categories[j],
+					y: data[i].drilldown.data[j],
+					color: Highcharts.Color(data[i].color).brighten(brightness).get()
+				});
+			}
+		}
+
+		// Create the chart
+		$('#' + id).highcharts({
+			chart: { type: 'pie' },
+			title: { text: '各部门工作时间分配统计' },
+			subtitle: { text: '' },
+			yAxis: { title: { text: 'Total percent market share' } },
+			plotOptions: { pie: { shadow: false, center: ['50%', '50%'] } },
+			tooltip: { valueSuffix: '%' },
+			series: [{
+				name: 'Browsers', size: '60%',
+				data: browserData,
+				dataLabels: {
+					formatter: function () { return this.y > 5 ? this.point.name : null; },
+					color: '#ffffff', distance: -30
+				}
+			}, {
+				name: 'Versions', size: '80%', innerSize: '60%',
+				data: versionsData,
+				dataLabels: {
+					formatter: function () {
+						// display only if larger than 1
+						return this.y > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + '%' : null;
+					}
+				}
+			}]
+		});
+
+	}
+	
+	
+});
+
+</script>
+</xmp>
